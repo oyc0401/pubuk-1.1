@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     int login=0;
     String TAG="로그";
-
+    long backKeyPressedTime = 0;
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +160,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() { //뒤로가기 버튼 2초안에 한번 더 누르면 종료
 
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+            toast.cancel();
+        }
+    }
 
 }
 

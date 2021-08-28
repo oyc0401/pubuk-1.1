@@ -15,7 +15,9 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.oyc0401.pubuk.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
