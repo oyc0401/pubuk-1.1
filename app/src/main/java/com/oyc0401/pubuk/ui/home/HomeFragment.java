@@ -53,6 +53,7 @@ import com.oyc0401.pubuk.ScrollingActivity111;
 import com.oyc0401.pubuk.dada;
 import com.oyc0401.pubuk.databinding.FragmentHomeBinding;
 import com.oyc0401.pubuk.setting;
+import com.oyc0401.pubuk.ui.dashboard.DashboardViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +74,7 @@ import method.parse;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
+    private HomeViewModel homeViewModel;
 
     int grade, clas, width, height, LunchTextView_Width, login, first_lunch_view, Setting_To_Main;
     int check_oncreate = 0;
@@ -108,9 +110,22 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        onSaveInstanceState(savedInstanceState);
+        Log.d("로그", "onCreateView: 홈 온크리에이트뷰뷰뷰뷰뷰뷰ㅠ");
+        homeViewModel =
+                new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+
+
+
+
+
+
+
+
 
 
         check_oncreate = 1;
@@ -377,6 +392,15 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("로그", "onCreateView: 홈 온크리에이트");
+    }
+
+
 
 
     private String[][] Array_table() {
@@ -727,11 +751,16 @@ public class HomeFragment extends Fragment {
     }
 
 
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("로그", "onCreateView: 홈 크리에이티드");
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d("로그", "onCreateView: 홈 디스트로이");
         binding = null;
     }
 }

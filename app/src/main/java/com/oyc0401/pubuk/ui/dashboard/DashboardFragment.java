@@ -1,6 +1,7 @@
 package com.oyc0401.pubuk.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,11 @@ public class DashboardFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
 private FragmentDashboardBinding binding;
 
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
@@ -33,6 +37,10 @@ private FragmentDashboardBinding binding;
                 textView.setText(s);
             }
         });
+
+        Log.d("로그", "onCreateView: dsada");
+
+
         return root;
     }
 

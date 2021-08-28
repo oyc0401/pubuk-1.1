@@ -3,7 +3,7 @@
     <style name="Theme.Pubuk" parent="Theme.AppCompat.Light.NoActionBar"><!-- 테마 없음: Theme.AppCompat.Light.NoActionBar,,,,,Theme.MaterialComponents.DayNight.DarkActionBar-->
 
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#DDDDDD</item>
+        <item name="colorPrimary">#2196F3</item>
         <item name="colorPrimaryVariant">#689F38</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="android:textColorPrimary">#000000</item>
