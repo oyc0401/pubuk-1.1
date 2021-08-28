@@ -1,23 +1,709 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.notifications.NotificationsFragment" >
 
-    <TextView
-        android:id="@+id/text_notifications"
+
+
+
+    <Button
+        android:id="@+id/school"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@drawable/button_effect"
+        android:text="부천 북 고등학교"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/grade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@drawable/button_effect"
+        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right_24"
+        android:text="3학년"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/clas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@drawable/button_effect"
+        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right_24"
+        android:text="10반"
+        android:textColor="@color/black" />
+
+
+    <!--Button
+        android:id="@+id/score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@drawable/button_effect"
+        android:textColor="@color/black"
+        android:text="내신등급 설정"/ -->
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@drawable/button_effect"
+        android:text="확인"
+        android:textColor="@color/black" />
+
+    <!--TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/layout_background"
+        android:elevation="1dp"
+        android:stretchColumns="*">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="국어"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="수학"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="영어"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="탐구1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="탐구2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="탐구3"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="확통"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="1학년 1학기"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_4"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_5"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st1_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="1학년2학기"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_4"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_5"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st2_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="2학년 1학기"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_4"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_5"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st3_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="2학년 2학기"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_4"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_5"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st4_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="3학년 1학기"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_4"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_5"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+
+            <TextView
+                android:id="@+id/st5_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/table_heighthalf"
+                android:layout_margin="@dimen/line"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize" />
+        </TableRow>
+
+
+    </TableLayout>
+    <TextView
+        android:id="@+id/score_average1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="1학년 1학기 내신 평균"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/score_average2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="1학년 2학기 내신 평균"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/score_average3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="2학년 1학기 내신 평균"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/score_average4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="2학년 2학기 내신 평균"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/score_average5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="3학년 1학기 내신 평균"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/score_average_full"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginHorizontal="10dp"
+        android:text="내신 평균"
+        android:textColor="@color/black" /-->
+
+
+
+
+
+</LinearLayout>

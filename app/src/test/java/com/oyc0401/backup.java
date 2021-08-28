@@ -1,4 +1,4 @@
-package com.oyc0401.pubuk.ui.home;
+package com.oyc0401;
 
 import static com.oyc0401.pubuk.R.drawable.time1_black;
 import static com.oyc0401.pubuk.R.drawable.time1_blue;
@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Point;
@@ -17,10 +19,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.widget.Button;
@@ -32,11 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,11 +46,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.oyc0401.pubuk.MainActivity;
 import com.oyc0401.pubuk.R;
 import com.oyc0401.pubuk.ScrollingActivity111;
-import com.oyc0401.pubuk.dada;
-import com.oyc0401.pubuk.databinding.FragmentHomeBinding;
+import com.oyc0401.pubuk.databinding.ActivityMainBinding;
 import com.oyc0401.pubuk.setting;
 
 import org.json.JSONArray;
@@ -72,9 +69,7 @@ import java.util.Locale;
 import method.AddDate;
 import method.parse;
 
-public class HomeFragment extends Fragment {
-private FragmentHomeBinding binding;
-
+public class backup extends AppCompatActivity {
     int grade, clas, width, height, LunchTextView_Width, login, first_lunch_view, Setting_To_Main;
     int check_oncreate = 0;
     private long backKeyPressedTime = 0;
@@ -107,30 +102,35 @@ private FragmentHomeBinding binding;
     Dialog dl_login; // 커스텀 다이얼로그
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+    private ActivityMainBinding mainBinding;
 
-    binding = FragmentHomeBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+        mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = mainBinding.getRoot();
+        setContentView(view);
 
         check_oncreate = 1;
-        iv_image = binding.ivImage;
-        iv_banner = binding.ivBanner;
-        iv_congress = binding.ivCongress1;
-        iv_congress2 = binding.ivCongress2;
-        iv_congress3 = binding.ivCongress3;
-        iv_congress4 = binding.ivCongress4;
+        iv_image = findViewById(R.id.iv_image);//이미지
+        iv_banner = findViewById(R.id.iv_banner);
+        iv_congress = findViewById(R.id.iv_congress1);
+        iv_congress2 = findViewById(R.id.iv_congress2);
+        iv_congress3 = findViewById(R.id.iv_congress3);
+        iv_congress4 = findViewById(R.id.iv_congress4);
         //new DownloadFilesTask().execute("http://www.puchonbuk.hs.kr/upload/l_passquery/20210601_2.jpeg");//이미지
 
+        Intent intent_univ = new Intent(this, ScrollingActivity111.class);//대학입결 인텐트
+        Intent intent_setting = new Intent(this, setting.class);//설정 인텐트
+        Button btn_univ = findViewById(R.id.btn_univ);
+        TextView lunch1 = findViewById(R.id.lunch);
+        HorizontalScrollView hsv = findViewById(R.id.hsv);
+        BottomNavigationView navigation = findViewById(R.id.nav_view);
+        LinearLayout lunchview = findViewById(R.id.lunchview);
 
-        Button btn_univ = binding.btnUniv;
-        TextView lunch1 = binding.lunch;
-        HorizontalScrollView hsv = binding.hsv;
-        LinearLayout lunchview = binding.lunchview;
-
-        
-        SharedPreferences mPreferences = this.getActivity().getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
 
         grade = mPreferences.getInt("grade", 1);
@@ -138,7 +138,7 @@ private FragmentHomeBinding binding;
         preferencesEditor.putInt("setting_To_Main", 1);
         login = mPreferences.getInt("login", 0);
 
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size); // 화면사이즈 구하기
         width = size.x; // 너비
@@ -147,13 +147,17 @@ private FragmentHomeBinding binding;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        
+        Intent intent1 = new Intent(this, com.oyc0401.pubuk.dada.class);//설정 인텐트
 
 
-/*
+//jdffsd
+        Button btn_tp = findViewById(R.id.btn_tp_nav);
+        btn_tp.setOnClickListener(v -> {
+            startActivity(intent1);
+        });
 
 
-        TextView tv_timetable321 = binding.tvTimetable321;
+        TextView tv_timetable321 = findViewById(R.id.tv_timetable321);
         tv_timetable321.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,17 +173,16 @@ private FragmentHomeBinding binding;
 
         ///학급 일정
         set_perform();
-        TextView tv_perform = binding.tvPerformTitle;
+        TextView tv_perform = findViewById(R.id.tv_perform_title);
         tv_perform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
-                EditText et_perfomance = binding.etPerformance;
+                EditText et_perfomance = findViewById(R.id.et_performance);
                 myRef.setValue(et_perfomance.getText().toString());
-                Toast.makeText(getActivity(), "저장되었습니다", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(MainActivity.this, "저장되었습니다", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -192,7 +195,7 @@ private FragmentHomeBinding binding;
         subp.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(getActivity()).load(uri).into(iv_image);
+                Glide.with(MainActivity.this).load(uri).into(iv_image);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -208,7 +211,7 @@ private FragmentHomeBinding binding;
         });
         iv_image.setClipToOutline(true);
 
-        TextView tv_lunchPicture_title = binding.tvLunchPictureTitle;
+        TextView tv_lunchPicture_title = findViewById(R.id.tv_lunchPicture_title);
         tv_lunchPicture_title.setText(month + "월 " + date + "일 급식사진");
         tv_lunchPicture_title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,15 +234,15 @@ private FragmentHomeBinding binding;
         subp_banner.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri1) {
-                Glide.with(getActivity()).load(uri1).into(iv_banner);
+                Glide.with(MainActivity.this).load(uri1).into(iv_banner);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
             }
         });
-        ImageView iv_banner = binding.ivBanner;
-        TextView memo = binding.memo;
+        ImageView iv_banner = findViewById(R.id.iv_banner);
+        TextView memo = findViewById(R.id.memo);
         memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,7 +294,7 @@ private FragmentHomeBinding binding;
         subp_congress.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri1) {
-                Glide.with(getActivity()).load(uri1).into(iv_congress);
+                Glide.with(MainActivity.this).load(uri1).into(iv_congress);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -303,7 +306,7 @@ private FragmentHomeBinding binding;
         subp_congress2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri1) {
-                Glide.with(getActivity()).load(uri1).into(iv_congress2);
+                Glide.with(MainActivity.this).load(uri1).into(iv_congress2);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -315,7 +318,7 @@ private FragmentHomeBinding binding;
         subp_congress3.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri1) {
-                Glide.with(getActivity()).load(uri1).into(iv_congress3);
+                Glide.with(MainActivity.this).load(uri1).into(iv_congress3);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -327,7 +330,7 @@ private FragmentHomeBinding binding;
         subp_congress4.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri1) {
-                Glide.with(getActivity()).load(uri1).into(iv_congress4);
+                Glide.with(MainActivity.this).load(uri1).into(iv_congress4);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -336,7 +339,7 @@ private FragmentHomeBinding binding;
         });
 
 
-        TextView tv_congress_title = binding.tvCongressTitle;
+        TextView tv_congress_title = findViewById(R.id.tv_congress_title);
         tv_congress_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,11 +356,19 @@ private FragmentHomeBinding binding;
         });
 
 
-        // 시간표 findViewByIdF 하기
+        // 시간표 findViewById 하기
         for (int i = 1; i <= 7; i++) {
             for (int j = 1; j <= 5; j++) {
-                tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", getActivity().getPackageName()));
+                tv[i][j] = findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", this.getPackageName()));
             }
+        }
+
+        //처음 실핼할때만 설정화면 이동하기
+        int check = mPreferences.getInt("check", 0);
+        if (check == 0) {
+            preferencesEditor.putInt("check", 1);
+            preferencesEditor.apply();
+            startActivity(intent_setting);
         }
 
         //기본 시간표
@@ -379,13 +390,41 @@ private FragmentHomeBinding binding;
         table_api tableApi = new table_api();
         tableApi.execute(String.valueOf(grade), String.valueOf(clas));
 
+        //네비게이션바 설정
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {//바텀 네비게이션 설정
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        return true;
+                    case R.id.navigation_dashboard:
+                        startActivity(intent_univ);
+                        //Toast.makeText(MainActivity.this, "미구현", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.navigation_notifications:
+                        startActivity(intent_setting);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        //입결 버튼 설정
+        btn_univ.setOnClickListener(new View.OnClickListener() {//대학입결 버튼
+            @Override
+            public void onClick(View v) {
+                startActivity(intent_univ);
+                overridePendingTransition(0, 0);
+            }
+        });
+
 
         //비번
-        dl_login = new Dialog(getActivity());// Dialog 초기화
+        dl_login = new Dialog(MainActivity.this);// Dialog 초기화
         dl_login.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
         dl_login.setContentView(R.layout.dl_login);
 
-        TextView tv_toolbar = root.findViewById(R.id.tv_toolbar);
+        TextView tv_toolbar = findViewById(R.id.tv_toolbar);
         tv_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,7 +432,7 @@ private FragmentHomeBinding binding;
             }
         });
 
-        TextView tv_time1 = binding.tvTime1;
+        TextView tv_time1 = findViewById(R.id.tv_time1);
         EditText setID = dl_login.findViewById(R.id.setID);
         Button loginOK = dl_login.findViewById(R.id.loginOK);
         loginOK.setOnClickListener(new View.OnClickListener() {
@@ -402,19 +441,19 @@ private FragmentHomeBinding binding;
                 String password = setID.getText().toString();
                 if (password.equals("happy")) {
                     login = 10;
-                    tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_blue));
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
                     preferencesEditor.putInt("login", 10);
                     preferencesEditor.apply();
-                    Toast.makeText(getActivity(), "로그인", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
                 } else if (password.equals("puzzle24")) {
                     login = 20;
-                    tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_black));
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
                     preferencesEditor.putInt("login", 20);
                     preferencesEditor.apply();
 
-                    Toast.makeText(getActivity(), "로그인", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
                 } else {
-                    tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_white));
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
                     login = 0;
                     preferencesEditor.putInt("login", 0);
                     preferencesEditor.apply();
@@ -426,31 +465,15 @@ private FragmentHomeBinding binding;
         });
         Log.d(TAG, "onCreate 로그인 코드: " + login);
         if (login == 0) {
-            tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_white));
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
         } else if (login == 10) {
-            tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_blue));
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
         } else if (login == 20) {
-            tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_black));
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
         }
 
 
-
-
-
-
-*/
-
-
-
-
-
-        return root;
     }
-
-
-
-
-
 
 
     private String[][] Array_table() {
@@ -462,7 +485,7 @@ private FragmentHomeBinding binding;
             }
         }
 
-        SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
         String tablese = mPreferences.getString("table_json", "");
 
         try {//json 문자열을 배열에 넣음
@@ -503,7 +526,7 @@ private FragmentHomeBinding binding;
         String[][] arr = new String[14][40];
 
         int 몇일을파싱 = 25;
-        SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
         String lunch_json = mPreferences.getString("lunch_json", "");
         for (int i = 0; i <= 30; i++) {//배열 초기화
             arraysum[i][0] = "0";
@@ -560,7 +583,7 @@ private FragmentHomeBinding binding;
             }
         }
 
-        AssetManager assetManager = getActivity().getAssets();
+        AssetManager assetManager = getAssets();
         try {
             InputStream is = assetManager.open("lunch/table_original.json");//"lunch/table_original.json",,,,"lunch/table_original_backup.json"
 
@@ -612,9 +635,9 @@ private FragmentHomeBinding binding;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
-        TextView tv_perform = getActivity().findViewById(R.id.tv_perform_title);
+        TextView tv_perform = findViewById(R.id.tv_perform_title);
         tv_perform.setText(grade + "학년 " + clas + "반 일정");
-        EditText et_perfomance = getActivity().findViewById(R.id.et_performance);
+        EditText et_perfomance = findViewById(R.id.et_performance);
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -683,9 +706,9 @@ private FragmentHomeBinding binding;
     }
 
     public void createtv(int b, int c, int daynum) {//createtv(7,15);=7월 15일급식출력
-        LinearLayout lunch_menu_linear = new LinearLayout(getActivity().getApplicationContext());
-        TextView tv_lunch_date = new TextView(getActivity().getApplicationContext());
-        TextView tv_lunch = new TextView(getActivity().getApplicationContext());
+        LinearLayout lunch_menu_linear = new LinearLayout(getApplicationContext());
+        TextView tv_lunch_date = new TextView(getApplicationContext());
+        TextView tv_lunch = new TextView(getApplicationContext());
 
         dada = day[daynum];
         //Log.d("로그-출력요일",dada);
@@ -720,15 +743,15 @@ private FragmentHomeBinding binding;
 
 
         if (first_lunch_view == 10) {
-            tv_lunch_date.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.lunch_date_background1));
-            lunch_menu_linear.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.lunch_background1));
+            tv_lunch_date.setBackground(ContextCompat.getDrawable(this, R.drawable.lunch_date_background1));
+            lunch_menu_linear.setBackground(ContextCompat.getDrawable(this, R.drawable.lunch_background1));
             first_lunch_view = 0;
         } else {
-            tv_lunch_date.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.lunch_date_background0));
-            lunch_menu_linear.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.lunch_background));
+            tv_lunch_date.setBackground(ContextCompat.getDrawable(this, R.drawable.lunch_date_background0));
+            lunch_menu_linear.setBackground(ContextCompat.getDrawable(this, R.drawable.lunch_background));
         }
 
-        LinearLayout lunchview = getActivity().findViewById(R.id.lunchview);
+        LinearLayout lunchview = findViewById(R.id.lunchview);
 
         lunchview.addView(lunch_menu_linear);
 
@@ -759,7 +782,7 @@ private FragmentHomeBinding binding;
 
         protected void onPostExecute(String result) {
             //저장
-            SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+            SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
             SharedPreferences.Editor preferencesEditor = mPreferences.edit();
             preferencesEditor.putString("table_json", receiveMsg);
             preferencesEditor.apply();
@@ -792,27 +815,219 @@ private FragmentHomeBinding binding;
         }
 
         protected void onPostExecute(String result) {
-            SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+            SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
             SharedPreferences.Editor preferencesEditor = mPreferences.edit();
             preferencesEditor.putString("lunch_json", receiveMsg);
             preferencesEditor.apply();
             set_lunch();
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-@Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    in.close();
+
+
+                    Uri file = data.getData();
+                    StorageReference riversRef = storageRef.child("lunch_menu/" + String.valueOf(fulldate) + ".jpg");
+                    UploadTask uploadTask = riversRef.putFile(file);
+
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 살패", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 성공", Toast.LENGTH_LONG).show();
+
+
+                            iv_image.setImageBitmap(img);
+                        }
+                    });
+
+                    //서브 저장
+                    Date cu_lunch = Calendar.getInstance().getTime();
+                    SimpleDateFormat mrealfulldate_lunch = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+                    String realfulldate_lunch = mrealfulldate_lunch.format(cu_lunch);
+                    StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate_lunch + ".jpg");
+                    UploadTask uploadTask11 = riversRef11.putFile(file);
+
+                    uploadTask11.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MainActivity.this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    InputStream in1 = getContentResolver().openInputStream(data.getData());
+
+                    Bitmap img1 = BitmapFactory.decodeStream(in1);
+                    in1.close();
+
+
+                    Uri file1 = data.getData();
+                    StorageReference riversRef1 = storageRef.child("banner/" + 1 + ".jpg");
+                    UploadTask uploadTask1 = riversRef1.putFile(file1);
+
+                    uploadTask1.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 살패", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 성공", Toast.LENGTH_LONG).show();
+
+                            iv_banner.setImageBitmap(img1);
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MainActivity.this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    InputStream in1 = getContentResolver().openInputStream(data.getData());
+
+                    Bitmap img1 = BitmapFactory.decodeStream(in1);
+                    in1.close();
+
+
+                    Uri file1 = data.getData();
+                    StorageReference riversRef1 = storageRef.child("congress/" + 1 + ".jpg");
+                    UploadTask uploadTask1 = riversRef1.putFile(file1);
+
+                    uploadTask1.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 살패", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(MainActivity.this, "사진 업로드 성공", Toast.LENGTH_LONG).show();
+
+                            iv_congress.setImageBitmap(img1);
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MainActivity.this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
     }
+
+    @Override
+    public void onResume() {//재시작시
+        super.onResume();
+        Log.d(TAG, "onResume: 재시작");
+
+        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+        grade = mPreferences.getInt("grade", 1);
+        clas = mPreferences.getInt("class", 1);
+        Setting_To_Main = mPreferences.getInt("setting_To_Main", 1);
+        preferencesEditor.putInt("setting_To_Main", 1);
+        preferencesEditor.apply();
+
+        if (Setting_To_Main == 100) {
+
+            //기본 시간표
+            parse par = new parse();
+            par.setgrade(grade, clas);
+            timetable_original = Array_tableOriginal(grade, clas);
+            for (int i = 1; i <= 7; i++) {
+                for (int j = 1; j <= 5; j++) {
+                    tv[i][j].setText(timetable_original[i][j]);
+
+                }
+            }
+            //Log.d("로그 세팅투메인=", String.valueOf(mPreferences.getInt("setting_To_Main", 0)));
+            //Log.d("로그 Setting_To_Main=", String.valueOf(Setting_To_Main));
+            Log.d("로그", "방금 설정 들어감");
+            timetable_original = Array_tableOriginal(grade, clas);
+            //시간표 함수 실행
+            table_api tableApi = new table_api();
+            tableApi.execute(String.valueOf(grade), String.valueOf(clas));
+            set_perform();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() { //뒤로가기 버튼 2초안에 한번 더 누르면 종료
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+            toast.cancel();
+        }
+    }
+
+
+    public void set_perform_clear() {
+
+        for (int grade = 1; grade <= 3; grade++) {
+            for (int clas = 1; clas <= 10; clas++) {
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference(grade + "_" + clas);
+                myRef.setValue("텍스트를 눌러 편집후 저장 버튼을 눌러 학급일정을 저장해주세요\n\n\n\n\n");
+
+            }
+        }
+
+    }
+
+
 }
+
+
