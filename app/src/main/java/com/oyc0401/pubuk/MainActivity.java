@@ -5,9 +5,11 @@ import static com.oyc0401.pubuk.R.drawable.time1_blue;
 import static com.oyc0401.pubuk.R.drawable.time1_white;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -73,10 +75,14 @@ import method.parse;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    int login=0;
-    String TAG="로그";
+    int login = 0;
+    String TAG = "로그";
     long backKeyPressedTime = 0;
     Toast toast;
+
+    Date cu = Calendar.getInstance().getTime();
+    SimpleDateFormat mfulldate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+    int fulldate = Integer.parseInt(mfulldate.format(cu));
 
 
     @Override
@@ -94,15 +100,53 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
 
-
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                Log.d(TAG, "onCreate:지금 어디 " + navController.getCurrentDestination().toString());
+            }
+        });
+
+        //NavigationUI.setupWithNavController(binding.navView, navController);
 
 
+        navView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    Log.d(TAG, "onNavigationItemSelected: 111");
+                    if (navController.getCurrentDestination().toString().equals("Destination(com.oyc0401.pubuk:id/navigation_home) label=Home class=com.oyc0401.pubuk.ui.home.HomeFragment")) {
+                    } else {
+                        navController.navigate(R.id.navigation_home);
+                    }
 
 
+                    return true;
+                case R.id.navigation_dashboard:
+                    Log.d(TAG, "onNavigationItemSelected: 222");
 
 
+                    return true;
+                case R.id.navigation_notifications:
+                    Log.d(TAG, "onNavigationItemSelected: 333");
+                    if (navController.getCurrentDestination().toString().equals("Destination(com.oyc0401.pubuk:id/navigation_notifications) label=Notifications class=com.oyc0401.pubuk.ui.notifications.NotificationsFragment")) {
+                    } else {
+                        navController.navigate(R.id.navigation_notifications);
+                    }
+
+
+                    return true;
+            }
+            return false;
+        });
+
+
+        setpassword();
+
+    }
+
+    private void setpassword() {
         String SharedPrefFile = "com.example.android.SharedPreferences";
         SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -119,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 dl_login.show();
             }
         });
-
-
 
         TextView tv_time1 = findViewById(R.id.tv_time1);
         EditText setID = dl_login.findViewById(R.id.setID);
@@ -162,8 +204,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (login == 20) {
             tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
         }
-
     }
+
 
     @Override
     public void onBackPressed() { //뒤로가기 버튼 2초안에 한번 더 누르면 종료

@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Point;
@@ -29,6 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -47,6 +52,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.oyc0401.pubuk.MainActivity;
 import com.oyc0401.pubuk.R;
 import com.oyc0401.pubuk.ScrollingActivity111;
@@ -106,6 +112,100 @@ public class HomeFragment extends Fragment {
     int REQUEST_CODE = 0;
 
     Dialog dl_login; // 커스텀 다이얼로그
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+
+    ActivityResultLauncher<String> mGetlunch = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
+
+                        //서브 저장
+                        Date cu_lunch = Calendar.getInstance().getTime();
+                        SimpleDateFormat mrealfulldate_lunch = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+                        String realfulldate_lunch = mrealfulldate_lunch.format(cu_lunch);
+                        StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate_lunch + ".jpg");
+                        UploadTask uploadTask11 = riversRef11.putFile(uri);
+
+                        uploadTask11.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            }
+                        });
+
+                    } catch (Exception e) {
+
+                    }
+                    Log.d(TAG, "onActivityResult: rorororororo" + uri);
+                }
+            });
+
+    ActivityResultLauncher<String> mGetbanner = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        StorageReference riversRef = storageRef.child("banner/" + 1 + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+
+    ActivityResultLauncher<String> mGetcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -117,15 +217,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
-
-
-
-
-
-
-
 
 
         check_oncreate = 1;
@@ -231,11 +322,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (login == 10 | login == 20) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    REQUEST_CODE = 1;
-                    startActivityForResult(intent, REQUEST_CODE);
+                    mGetlunch.launch("image/*");
                 } else {
                     //Toast.makeText(MainActivity.this, "권한이 없습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -261,11 +348,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (login == 20) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    REQUEST_CODE = 2;
-                    startActivityForResult(intent, REQUEST_CODE);
+                    mGetbanner.launch("image/*");
                 } else {
                     //Toast.makeText(MainActivity.this, "권한이 없습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -358,11 +441,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (login == 20) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    REQUEST_CODE = 3;
-                    startActivityForResult(intent, REQUEST_CODE);
+                    mGetcomgress.launch("image/*");
                 } else {
                     //Toast.makeText(MainActivity.this, "권한이 없습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -399,8 +478,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.d("로그", "onCreateView: 홈 온크리에이트");
     }
-
-
 
 
     private String[][] Array_table() {
