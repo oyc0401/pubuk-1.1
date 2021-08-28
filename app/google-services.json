@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "198516962282",
+    "project_id": "bukgo-74a84",
+    "storage_bucket": "bukgo-74a84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198516962282:android:6da108667f09cc053d3893",
+        "android_client_info": {
+          "package_name": "com.oyc0401.pubuk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198516962282-0nbovspr9u3r842d7gacdt0aeh8pjir5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcXY17YpUOqpQbd2Rd_RAK3t-AknRe9fE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198516962282-0nbovspr9u3r842d7gacdt0aeh8pjir5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.oyc0401.pubuk">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/bukgoapp"
+        android:label="북고앱"
+        android:roundIcon="@mipmap/bukgoapp_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Pubuk"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".setting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ScrollingActivity111"
+            android:label="@string/title_activity_scrolling111"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Pubuk.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Pubuk">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

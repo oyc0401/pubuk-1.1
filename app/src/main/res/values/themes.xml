@@ -1,0 +1,58 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Pubuk" parent="Theme.AppCompat.Light.NoActionBar"><!-- 테마 없음: Theme.AppCompat.Light.NoActionBar,,,,,Theme.MaterialComponents.DayNight.DarkActionBar-->
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#DDDDDD</item>
+        <item name="colorPrimaryVariant">#689F38</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">#CCCCCC</item>
+        <!-- Customize your theme here. -->
+
+        <item name="toolbarStyle">@style/ToolbarStyle</item> <!--Toolbar 스타일-->
+
+
+
+    </style>
+
+    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">#C6ADAD</item> <!-- Toolbar의 배경색-->
+        <item name="titleTextAppearance">@style/ToolbarTitleStyle</item> <!-- Toolbar의 타이틀 텍스트-->
+        <item name="android:textColor">@color/black</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="subtitleTextAppearance">@style/ToolbarSubtitleStyle</item>
+
+    </style>
+
+
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/black</item> <!-- Toolbar의 타이틀 텍스트 색상-->
+        <item name="android:textSize">15dp</item> <!-- Toolbar의 타이틀 텍스트 사이즈-->
+    </style>
+
+    <!-- Toolbar의 서브타이틀 텍스트-->
+    <style name="ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/black</item> <!-- Toolbar의 서브타이틀 텍스트 색상-->
+        <item name="android:textSize">12dp</item> <!-- Toolbar의 서브타이틀 텍스트 사이즈-->
+    </style>
+
+
+
+
+
+
+    <style name="Theme.Pubuk.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="Theme.Pubuk.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Pubuk.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

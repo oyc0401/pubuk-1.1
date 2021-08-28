@@ -1,0 +1,77 @@
+//비밀번호
+        TextView tt7_1 = findViewById(R.id.tt7_1);
+        TextView tt7_5 = findViewById(R.id.tt7_5);
+        TextView tt6_4 = findViewById(R.id.tt6_4);
+        TextView tt6_5 = findViewById(R.id.tt6_5);
+        TextView nigoltt7_3 = findViewById(R.id.tt7_3);
+        tt7_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                password_6_4 = 0;
+                password_6_5 = 0;
+                password_7_5 = 0;
+                password_num = 0;
+                preferencesEditor.putInt("login", 0);
+                preferencesEditor.apply();
+                login = 0;
+                nigoltt7_3.setText(" ");
+            }
+        });
+        tt7_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password_6_4 == 0 && password_6_5 == 0 && password_7_5 == 0) {
+                    password_7_5 = 1;
+
+                } else if ((password_6_4 == 1 && password_6_5 == 1) && password_7_5 == 1) {
+                    password_num++;
+
+                } else {
+                    password_6_4 = 3;
+                    password_6_5 = 3;
+                    password_7_5 = 100;
+                    password_num = 100;
+                    //Toast.makeText(MainActivity.this, "틀림@@@@@@@@@", Toast.LENGTH_SHORT).show();
+                }
+
+
+                if (password_6_4 == 1 && password_6_5 == 1 && password_7_5 == 1 && password_num == 5) {
+                    Toast.makeText(MainActivity.this, "로그인 완료", Toast.LENGTH_SHORT).show();
+                    preferencesEditor.putInt("login", 1);
+                    preferencesEditor.apply();
+                    login = 1;
+                    nigoltt7_3.setText("로그인");
+                }
+            }
+        });
+        tt6_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password_6_4 == 0 && password_6_5 == 0 && password_7_5 == 1) {
+                    password_6_4 = 1;
+                    Log.d("로그-비번", "2번");
+                } else {
+                    password_6_4 = 3;
+                    password_6_5 = 3;
+                    password_7_5 = 100;
+                    password_num = 100;
+                    //Toast.makeText(MainActivity.this, "틀림@@@@@@@@@", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        tt6_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password_6_4 == 1 && password_6_5 == 0 && password_7_5 == 1) {
+                    password_6_5 = 1;
+                    Log.d("로그-비번", "3번");
+                } else {
+                    password_6_4 = 3;
+                    password_6_5 = 3;
+                    password_7_5 = 100;
+                    password_num = 100;
+                    //Toast.makeText(MainActivity.this, "틀림@@@@@@@@@", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });

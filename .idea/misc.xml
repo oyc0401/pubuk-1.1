@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/lunch_background.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/lunch_background1.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/lunch_date_background0.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/lunch_date_background1.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/time1_black.xml" value="0.2359375" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/time1_blue.xml" value="0.2359375" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable-v24/time1_white.xml" value="0.2359375" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/background_basic.xml" value="0.221875" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/background_hack_icon.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_left.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_left_touch.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_middle.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_middle_touch.xml" value="0.221875" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_right.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bg_hack_botton_right_touch.xml" value="0.221875" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bottom_selector_color.xml" value="0.203125" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/bukgoapp_background.xml" value="0.203125" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/button_effect.xml" value="0.203125" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/button_search_effect.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_android_black_24dp.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.2921875" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_24.xml" value="0.2921875" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_baseline_school_24.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_outline_analytics_24.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/ic_outline_image_not_supported_24.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_background.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_background2.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_tablebackground1.xml" value="0.21770833333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_tablebackground2.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_tablebackground3.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/layout_tablebackground4.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/line_color.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/lunch_background.xml" value="0.30572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/main_item_bacground.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/drawable/no_lunch.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_bookmark.xml" value="0.24114583333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_main.xml" value="0.1739969135802469" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_navmain.xml" value="0.2791666666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_option.xml" value="0.11727456940222898" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_scrolling111.xml" value="0.18" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/activity_setting.xml" value="0.11727456940222898" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/dialig1.xml" value="0.20572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/dl_login.xml" value="0.22" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/fragment_dashboard.xml" value="0.2791666666666667" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/fragment_home.xml" value="0.20380434782608695" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/fragment_lunch1.xml" value="0.20572916666666666" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/fragment_notifications.xml" value="0.1125" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/layout/list_tv.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/S3491/AndroidStudioProjects/pubuk/app/src/main/res/menu/bottom_nav_menu.xml" value="0.15555555555555556" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
