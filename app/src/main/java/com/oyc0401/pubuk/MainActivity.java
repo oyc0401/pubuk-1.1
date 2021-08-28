@@ -73,6 +73,9 @@ import method.parse;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    int login=0;
+    String TAG="로그";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,69 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+
+
+
+
+        String SharedPrefFile = "com.example.android.SharedPreferences";
+        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+
+        //비번
+        Dialog dl_login = new Dialog(MainActivity.this);// Dialog 초기화
+        dl_login.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
+        dl_login.setContentView(R.layout.dl_login);
+
+        TextView tv_toolbar = findViewById(R.id.tv_toolbar);
+        tv_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dl_login.show();
+            }
+        });
+
+
+
+        TextView tv_time1 = findViewById(R.id.tv_time1);
+        EditText setID = dl_login.findViewById(R.id.setID);
+        Button loginOK = dl_login.findViewById(R.id.loginOK);
+
+        loginOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String password = setID.getText().toString();
+                if (password.equals("happy")) {
+                    login = 10;
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
+                    preferencesEditor.putInt("login", 10);
+                    preferencesEditor.apply();
+                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
+                } else if (password.equals("puzzle24")) {
+                    login = 20;
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
+                    preferencesEditor.putInt("login", 20);
+                    preferencesEditor.apply();
+
+                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
+                } else {
+                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
+                    login = 0;
+                    preferencesEditor.putInt("login", 0);
+                    preferencesEditor.apply();
+                }
+                Log.d(TAG, password);
+                dl_login.cancel();
+
+            }
+        });
+        Log.d(TAG, "onCreate 로그인 코드: " + login);
+        if (login == 0) {
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
+        } else if (login == 10) {
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
+        } else if (login == 20) {
+            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
+        }
 
     }
 

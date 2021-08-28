@@ -1,8 +1,5 @@
 package com.oyc0401.pubuk.ui.home;
 
-import static com.oyc0401.pubuk.R.drawable.time1_black;
-import static com.oyc0401.pubuk.R.drawable.time1_blue;
-import static com.oyc0401.pubuk.R.drawable.time1_white;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -73,7 +70,7 @@ import method.AddDate;
 import method.parse;
 
 public class HomeFragment extends Fragment {
-private FragmentHomeBinding binding;
+    private FragmentHomeBinding binding;
 
     int grade, clas, width, height, LunchTextView_Width, login, first_lunch_view, Setting_To_Main;
     int check_oncreate = 0;
@@ -100,7 +97,7 @@ private FragmentHomeBinding binding;
     String[] day = {"", "일", "월", "화", "수", "목", "금", "토"};
 
 
-    TextView tv[][] = new TextView[10][10];
+    TextView[][] tv = new TextView[10][10];
     ImageView iv_image, iv_banner, iv_congress, iv_congress2, iv_congress3, iv_congress4;//이미지
     int REQUEST_CODE = 0;
 
@@ -108,10 +105,10 @@ private FragmentHomeBinding binding;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
-    binding = FragmentHomeBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
 
         check_oncreate = 1;
@@ -129,7 +126,7 @@ private FragmentHomeBinding binding;
         HorizontalScrollView hsv = binding.hsv;
         LinearLayout lunchview = binding.lunchview;
 
-        
+
         SharedPreferences mPreferences = this.getActivity().getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
 
@@ -147,13 +144,16 @@ private FragmentHomeBinding binding;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        
-
-
-/*
-
-
         TextView tv_timetable321 = binding.tvTimetable321;
+        timetable_original = Array_tableOriginal(grade, clas);
+
+        // 시간표 findViewByIdF 하기
+        for (int i = 1; i <= 7; i++) {
+            for (int j = 1; j <= 5; j++) {
+                tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", getActivity().getPackageName()));
+            }
+        }
+
         tv_timetable321.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,17 +353,10 @@ private FragmentHomeBinding binding;
         });
 
 
-        // 시간표 findViewByIdF 하기
-        for (int i = 1; i <= 7; i++) {
-            for (int j = 1; j <= 5; j++) {
-                tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", getActivity().getPackageName()));
-            }
-        }
-
         //기본 시간표
         parse par = new parse();
         par.setgrade(grade, clas);
-        timetable_original = Array_tableOriginal(grade, clas);
+
         for (int i = 1; i <= 7; i++) {
             for (int j = 1; j <= 5; j++) {
                 tv[i][j].setText(timetable_original[i][j]);
@@ -379,7 +372,7 @@ private FragmentHomeBinding binding;
         table_api tableApi = new table_api();
         tableApi.execute(String.valueOf(grade), String.valueOf(clas));
 
-
+/*
         //비번
         dl_login = new Dialog(getActivity());// Dialog 초기화
         dl_login.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
@@ -387,6 +380,12 @@ private FragmentHomeBinding binding;
 
         TextView tv_toolbar = root.findViewById(R.id.tv_toolbar);
         tv_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+      tv_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dl_login.show();
@@ -432,25 +431,9 @@ private FragmentHomeBinding binding;
         } else if (login == 20) {
             tv_time1.setBackground(ContextCompat.getDrawable(getActivity(), time1_black));
         }
-
-
-
-
-
-
 */
-
-
-
-
-
         return root;
     }
-
-
-
-
-
 
 
     private String[][] Array_table() {
@@ -560,7 +543,7 @@ private FragmentHomeBinding binding;
             }
         }
 
-        AssetManager assetManager = getActivity().getAssets();
+        AssetManager assetManager = getResources().getAssets();
         try {
             InputStream is = assetManager.open("lunch/table_original.json");//"lunch/table_original.json",,,,"lunch/table_original_backup.json"
 
@@ -612,9 +595,9 @@ private FragmentHomeBinding binding;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
-        TextView tv_perform = getActivity().findViewById(R.id.tv_perform_title);
+        TextView tv_perform = binding.tvPerformTitle;
         tv_perform.setText(grade + "학년 " + clas + "반 일정");
-        EditText et_perfomance = getActivity().findViewById(R.id.et_performance);
+        EditText et_perfomance = binding.etPerformance;
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -799,18 +782,9 @@ private FragmentHomeBinding binding;
             set_lunch();
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-@Override
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
