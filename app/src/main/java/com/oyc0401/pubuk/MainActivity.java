@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 //라이츄
 
 //피카츄
+        //꼬부기
 
         TextView tv_timetable321=findViewById(R.id.tv_timetable321);
         tv_timetable321.setOnClickListener(new View.OnClickListener() {
