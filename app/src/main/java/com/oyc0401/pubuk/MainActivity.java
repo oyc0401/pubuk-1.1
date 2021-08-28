@@ -140,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+        Button btn_tp=findViewById(R.id.btn_tp_nav);
+        btn_tp.setOnClickListener(v -> {
+
+        });
+
+
+
+
+
         TextView tv_timetable321=findViewById(R.id.tv_timetable321);
         tv_timetable321.setOnClickListener(new View.OnClickListener() {
             @Override
