@@ -7,7 +7,11 @@ import static com.oyc0401.pubuk.R.drawable.time1_white;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +51,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.oyc0401.pubuk.databinding.ActivityMainBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,12 +102,16 @@ public class MainActivity extends AppCompatActivity {
     Dialog dl_login; // 커스텀 다이얼로그
 
 
+private ActivityMainBinding mainBinding;
 
-//
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        mainBinding=ActivityMainBinding.inflate(getLayoutInflater());
+        View view=mainBinding.getRoot();
+        setContentView(view);
 
         check_oncreate = 1;
         iv_image = findViewById(R.id.iv_image);//이미지
@@ -140,10 +149,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+        Intent intent1 = new Intent(this, dada.class);//설정 인텐트
+
+
 //jdffsd
         Button btn_tp=findViewById(R.id.btn_tp_nav);
         btn_tp.setOnClickListener(v -> {
-
+startActivity(intent1);
         });
 
 

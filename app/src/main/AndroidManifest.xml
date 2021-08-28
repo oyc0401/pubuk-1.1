@@ -13,6 +13,13 @@
         android:theme="@style/Theme.Pubuk"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".dada"
+            android:exported="true" />
+        <activity
+            android:name=".bottom"
+            android:exported="true"
+            android:label="@string/title_activity_bottom" />
+        <activity
             android:name=".setting"
             android:screenOrientation="portrait" />
         <activity
