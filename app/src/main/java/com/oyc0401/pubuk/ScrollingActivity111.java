@@ -103,9 +103,9 @@ public class ScrollingActivity111 extends AppCompatActivity {
             hak3.setBackground(ContextCompat.getDrawable(ScrollingActivity111.this, bg_hack_botton_right_touch));
             hak3.setTextColor(Color.WHITE);
         }
-
         Arrays.sort(ARR);
-        //dilaog01.show(); 시작시 다이얼로그
+
+        //dilaog01.show(); //시작시 다이얼로그
 
         //웹뷰 동작
         webView.loadUrl(url1 + unicode1 + url2 + unicode2);

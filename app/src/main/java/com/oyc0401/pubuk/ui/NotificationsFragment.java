@@ -1,28 +1,24 @@
-package com.oyc0401.pubuk.ui.notifications;
+package com.oyc0401.pubuk.ui;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import com.oyc0401.pubuk.R;
+
 import com.oyc0401.pubuk.databinding.FragmentNotificationsBinding;
-import com.oyc0401.pubuk.setting;
 
 public class NotificationsFragment extends Fragment {
 
-private FragmentNotificationsBinding binding;
+    private FragmentNotificationsBinding binding;
     private String SharedPrefFile = "com.example.android.SharedPreferences";
     int grade;
     int clas, schoolcode;
@@ -36,17 +32,16 @@ private FragmentNotificationsBinding binding;
     TextView tv_st[][] = new TextView[8][10];
     String TAG = "로그";
 
-    String dbName="Data.db"; //database 파일명
-    String tableName="member"; // 표 이름
+    String dbName = "Data.db"; //database 파일명
+    String tableName = "member"; // 표 이름
 
     SQLiteDatabase db;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-    binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
-
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
 
         SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
@@ -252,24 +247,11 @@ private FragmentNotificationsBinding binding;
         */
 
 
-
-
-
-
-
-
-
-
-
         return root;
     }
 
 
-
-
-
-
-@Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

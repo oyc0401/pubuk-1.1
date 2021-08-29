@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E5E5E5"
-    tools:context=".ui.home.HomeFragment"
+    tools:context=".ui.HomeFragment"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -1170,7 +1172,7 @@
                     android:id="@+id/memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="제작: 코딩라이프\n\n플레이스토어에 의견 남겨주세요.\n\n 1.1.1" />
+                    android:text="제작: 코딩라이프\n\n플레이스토어에 의견 남겨주세요.\n\n 1.1.2" />
             </LinearLayout>
 
 

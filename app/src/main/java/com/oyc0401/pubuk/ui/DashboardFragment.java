@@ -1,30 +1,25 @@
-package com.oyc0401.pubuk.ui.dashboard;
+package com.oyc0401.pubuk.ui;
 
-import static method.value.TAG;
-
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.oyc0401.pubuk.MainActivity;
-import com.oyc0401.pubuk.R;
+import com.oyc0401.pubuk.ScrollingActivity111;
 import com.oyc0401.pubuk.ViewModel;
 import com.oyc0401.pubuk.databinding.FragmentDashboardBinding;
 
+import java.util.Objects;
+
 public class DashboardFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+
 private FragmentDashboardBinding binding;
-
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -32,9 +27,14 @@ private FragmentDashboardBinding binding;
         View root = binding.getRoot();
 
 
-        ViewModel model=new ViewModelProvider(getActivity()).get(ViewModel.class);
+        ViewModel model=new ViewModelProvider(requireActivity()).get(ViewModel.class);
         //model.setTextTable("431dadsadasd343124sd");
 
+
+        binding.btnUniv.setOnClickListener(v -> {
+            Intent intent=new Intent(requireActivity(),ScrollingActivity111.class);
+            startActivity(intent);
+        });
 
 
 
