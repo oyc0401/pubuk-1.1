@@ -56,7 +56,7 @@ import com.google.firebase.storage.UploadTask;
 import com.oyc0401.pubuk.MainActivity;
 import com.oyc0401.pubuk.R;
 import com.oyc0401.pubuk.ScrollingActivity111;
-import com.oyc0401.pubuk.dada;
+
 import com.oyc0401.pubuk.databinding.FragmentHomeBinding;
 import com.oyc0401.pubuk.setting;
 import com.oyc0401.pubuk.ui.dashboard.DashboardViewModel;
@@ -211,12 +211,54 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         onSaveInstanceState(savedInstanceState);
+
+
+
+
+
+
         Log.d("로그", "onCreateView: 홈 온크리에이트뷰뷰뷰뷰뷰뷰ㅠ");
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+
+
+
+
+        homeViewModel.getTextTable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Log.d(TAG, "onChange: 테이블");
+
+                SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                preferencesEditor.putString("table_json",s);
+                preferencesEditor.apply();
+                set_table();
+            }
+        });
+
+        homeViewModel.getTextLunch().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Log.d(TAG, "onChange: 런치");
+                SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
+                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                preferencesEditor.putString("lunch_json", s);
+                preferencesEditor.apply();
+                set_lunch();
+
+            }
+        });
+
+
+
+
+
+
+
 
 
         check_oncreate = 1;
@@ -459,14 +501,6 @@ public class HomeFragment extends Fragment {
 
             }
         }
-
-        //급식함수 실행
-        lunch_api lunchApi = new lunch_api();
-        lunchApi.execute(String.valueOf(fulldate));
-
-        //시간표 함수 실행
-        table_api tableApi = new table_api();
-        tableApi.execute(String.valueOf(grade), String.valueOf(clas));
 
 
         return root;
@@ -763,69 +797,9 @@ public class HomeFragment extends Fragment {
         lunch_menu_linear.addView(tv_lunch);
     }
 
-    public class table_api extends AsyncTask<String, Void, String> {//시간표 json 파일을 Shared에 저장하고 set talbe실행
-        private String receiveMsg;
 
-        protected void onPreExecute() {
-            Log.d("로그", "table_api 시작");
-        }
 
-        @Override
-        protected String doInBackground(String... params) {
 
-            String param1 = params[0];
-            String param2 = params[1];
-            String fir = AddDate.getCurMonday();
-            String las = AddDate.getCurFriday();
-
-            receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
-
-            return receiveMsg;
-
-        }
-
-        protected void onPostExecute(String result) {
-            //저장
-            SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-            SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-            preferencesEditor.putString("table_json", receiveMsg);
-            preferencesEditor.apply();
-
-            //시간표 배치
-            set_table();
-
-        }
-
-    }
-
-    public class lunch_api extends AsyncTask<String, Void, String> {//급식 json 파일을 Shared에 저장하고 get table,set talbe실행
-        private String receiveMsg;
-
-        protected void onPreExecute() {
-            Log.d("로그", "lunch_api 시작");
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String date1 = params[0];
-
-            AddDate add = new AddDate();
-            add.setOperands(date1, 0, 0, 30);
-            int date2 = add.get_date();
-
-            receiveMsg = parse.json("https://open.neis.go.kr/hub/mealServiceDietInfo?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&MLSV_FROM_YMD=" + date1 + "&MLSV_TO_YMD=" + date2);
-
-            return receiveMsg;
-        }
-
-        protected void onPostExecute(String result) {
-            SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-            SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-            preferencesEditor.putString("lunch_json", receiveMsg);
-            preferencesEditor.apply();
-            set_lunch();
-        }
-    }
 
 
     @Override

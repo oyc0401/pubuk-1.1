@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //NavigationUI.setupWithNavController(binding.navView, navController);
+        NavigationUI.setupWithNavController(binding.navView, navController);
 
 
-        navView.setOnNavigationItemSelectedListener(item -> {
+        /*navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     Log.d(TAG, "onNavigationItemSelected: 111");
@@ -125,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     Log.d(TAG, "onNavigationItemSelected: 222");
+                    if (navController.getCurrentDestination().toString().equals("Destination(com.oyc0401.pubuk:id/navigation_dashboard) label=Dashboard class=com.oyc0401.pubuk.ui.dashboard.DashboardFragment")) {
+                    } else {
+                        navController.navigate(R.id.navigation_dashboard);
+                    }
 
 
                     return true;
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
             }
             return false;
-        });
+        });*/
 
 
         setpassword();

@@ -23,13 +23,11 @@ private FragmentDashboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
 
-    binding = FragmentDashboardBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
-
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         final TextView textView = binding.textDashboard;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -37,6 +35,7 @@ private FragmentDashboardBinding binding;
                 textView.setText(s);
             }
         });
+
 
         Log.d("로그", "onCreateView: dsada");
 
