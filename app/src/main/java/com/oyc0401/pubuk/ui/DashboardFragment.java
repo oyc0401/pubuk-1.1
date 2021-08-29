@@ -19,29 +19,28 @@ import java.util.Objects;
 public class DashboardFragment extends Fragment {
 
 
-private FragmentDashboardBinding binding;
+    private FragmentDashboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
 
-        ViewModel model=new ViewModelProvider(requireActivity()).get(ViewModel.class);
+        ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
         //model.setTextTable("431dadsadasd343124sd");
 
 
         binding.btnUniv.setOnClickListener(v -> {
-            Intent intent=new Intent(requireActivity(),ScrollingActivity111.class);
+            Intent intent = new Intent(requireActivity(), ScrollingActivity111.class);
             startActivity(intent);
         });
-
 
 
         return root;
     }
 
-@Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

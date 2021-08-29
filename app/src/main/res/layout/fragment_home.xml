@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E5E5E5"
-    tools:context=".ui.HomeFragment"
-    android:orientation="vertical">
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+    tools:context=".ui.HomeFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,8 +22,6 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-
-
                 <TextView
                     android:id="@+id/tv_timetable"
                     android:layout_width="wrap_content"
@@ -40,10 +31,6 @@
                     android:text="시간표"
                     android:textColor="@color/black"
                     android:textSize="@dimen/titleText_size" />
-
-
-
-
 
                 <TableLayout
                     android:id="@+id/table"
@@ -967,8 +954,7 @@
                     android:id="@+id/iv_banner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/no_lunch1" />
+                    android:layout_gravity="center" />
 
 
             </LinearLayout>
@@ -1054,21 +1040,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/no_lunch"/>
+                            android:layout_marginRight="10dp" />
                         <ImageView
                             android:id="@+id/iv_congress3"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/no_lunch"/>
+                            android:layout_marginRight="10dp" />
                         <ImageView
                             android:id="@+id/iv_congress4"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:src="@drawable/no_lunch"/>
+                            android:layout_gravity="center" />
 
 
                     </LinearLayout>
@@ -1087,79 +1070,6 @@
                 android:text="대학교 입시 결과"
                 android:textColor="@color/black" />
 
-
-            <!--LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/main_item_bacground"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:fontFamily="monospace"
-                    android:text="학교 일정"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/titleText_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/main_item_bacground"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:fontFamily="monospace"
-                    android:text="드림서치"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/titleText_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/main_item_bacground"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:fontFamily="monospace"
-                    android:text="문제집 추천"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/titleText_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/main_item_bacground"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:fontFamily="monospace"
-                    android:text="대학교 소식"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/titleText_size" />
-            </LinearLayout-->
-
             <!--제작자 설명-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1175,12 +1085,6 @@
                     android:text="제작: 코딩라이프\n\n플레이스토어에 의견 남겨주세요.\n\n 1.1.2" />
             </LinearLayout>
 
-
-
-
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
-
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
