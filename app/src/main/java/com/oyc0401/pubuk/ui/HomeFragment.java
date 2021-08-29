@@ -30,6 +30,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -97,13 +98,17 @@ public class HomeFragment extends Fragment {
     Dialog dl_login; // 커스텀 다이얼로그
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
+
+
 /////////////////////////////////////////
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         onSaveInstanceState(savedInstanceState);
 
-        //뷰 바인딩
+
+
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -292,7 +297,12 @@ public class HomeFragment extends Fragment {
         });
 
 
+
+
         return root;
+
+
+
     }
 
     private String[][] Array_table(String json) {
@@ -623,6 +633,8 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
     });
+
+
 
 
     @Override

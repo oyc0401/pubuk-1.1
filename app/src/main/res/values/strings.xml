@@ -8,5 +8,21 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_bottom">bottom</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="timetable_tag">최근에 변동된 시간표는 적용되지 않을 수 있습니다</string>
+    <string name="lunch_menu">급식메뉴</string>
+    <string name="lunch_picture">급식사진</string>
+    <string name="perform">수행평가 안내</string>
 
 </resources>
