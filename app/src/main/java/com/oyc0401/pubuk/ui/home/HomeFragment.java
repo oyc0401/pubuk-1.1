@@ -1,7 +1,6 @@
 package com.oyc0401.pubuk.ui.home;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,20 +11,15 @@ import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,7 +38,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,12 +47,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.oyc0401.pubuk.MainActivity;
+import com.oyc0401.pubuk.ViewModel;
 import com.oyc0401.pubuk.R;
-import com.oyc0401.pubuk.ScrollingActivity111;
 
 import com.oyc0401.pubuk.databinding.FragmentHomeBinding;
-import com.oyc0401.pubuk.setting;
-import com.oyc0401.pubuk.ui.dashboard.DashboardViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,17 +61,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import method.AddDate;
-import method.parse;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-    private HomeViewModel homeViewModel;
+
 
     int grade, clas, width, height, LunchTextView_Width, login, first_lunch_view, Setting_To_Main;
     int check_oncreate = 0;
@@ -114,98 +103,7 @@ public class HomeFragment extends Fragment {
     Dialog dl_login; // 커스텀 다이얼로그
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-
-    ActivityResultLauncher<String> mGetlunch = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                    try {
-                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
-                        Bitmap img = BitmapFactory.decodeStream(in);
-                        in.close();
-
-                        StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
-                        UploadTask uploadTask = riversRef.putFile(uri);
-                        uploadTask.addOnFailureListener(exception ->
-                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                                    iv_image.setImageBitmap(img);
-                                });
-
-                        //서브 저장
-                        Date cu_lunch = Calendar.getInstance().getTime();
-                        SimpleDateFormat mrealfulldate_lunch = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
-                        String realfulldate_lunch = mrealfulldate_lunch.format(cu_lunch);
-                        StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate_lunch + ".jpg");
-                        UploadTask uploadTask11 = riversRef11.putFile(uri);
-
-                        uploadTask11.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            }
-                        });
-
-                    } catch (Exception e) {
-
-                    }
-                    Log.d(TAG, "onActivityResult: rorororororo" + uri);
-                }
-            });
-
-    ActivityResultLauncher<String> mGetbanner = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                    try {
-                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
-                        Bitmap img = BitmapFactory.decodeStream(in);
-                        in.close();
-
-                        StorageReference riversRef = storageRef.child("banner/" + 1 + ".jpg");
-                        UploadTask uploadTask = riversRef.putFile(uri);
-                        uploadTask.addOnFailureListener(exception ->
-                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                                    iv_image.setImageBitmap(img);
-                                });
-                    } catch (Exception e) {
-
-                    }
-                }
-            });
-
-    ActivityResultLauncher<String> mGetcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                    try {
-                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
-                        Bitmap img = BitmapFactory.decodeStream(in);
-                        in.close();
-
-                        StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
-                        UploadTask uploadTask = riversRef.putFile(uri);
-                        uploadTask.addOnFailureListener(exception ->
-                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                                    iv_image.setImageBitmap(img);
-                                });
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            });
+/////////////////////////////////////////
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -213,53 +111,8 @@ public class HomeFragment extends Fragment {
         onSaveInstanceState(savedInstanceState);
 
 
-
-
-
-
-        Log.d("로그", "onCreateView: 홈 온크리에이트뷰뷰뷰뷰뷰뷰ㅠ");
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
-
-
-
-        homeViewModel.getTextTable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChange: 테이블");
-
-                SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                preferencesEditor.putString("table_json",s);
-                preferencesEditor.apply();
-                set_table();
-            }
-        });
-
-        homeViewModel.getTextLunch().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChange: 런치");
-                SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                preferencesEditor.putString("lunch_json", s);
-                preferencesEditor.apply();
-                set_lunch();
-
-            }
-        });
-
-
-
-
-
-
-
-
 
         check_oncreate = 1;
         iv_image = binding.ivImage;
@@ -268,14 +121,6 @@ public class HomeFragment extends Fragment {
         iv_congress2 = binding.ivCongress2;
         iv_congress3 = binding.ivCongress3;
         iv_congress4 = binding.ivCongress4;
-        //new DownloadFilesTask().execute("http://www.puchonbuk.hs.kr/upload/l_passquery/20210601_2.jpeg");//이미지
-
-
-        Button btn_univ = binding.btnUniv;
-        TextView lunch1 = binding.lunch;
-        HorizontalScrollView hsv = binding.hsv;
-        LinearLayout lunchview = binding.lunchview;
-
 
         SharedPreferences mPreferences = this.getActivity().getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -296,6 +141,7 @@ public class HomeFragment extends Fragment {
 
         TextView tv_timetable321 = binding.tvTimetable321;
         timetable_original = Array_tableOriginal(grade, clas);
+
 
         // 시간표 findViewByIdF 하기
         for (int i = 1; i <= 7; i++) {
@@ -492,29 +338,38 @@ public class HomeFragment extends Fragment {
 
 
         //기본 시간표
-        parse par = new parse();
-        par.setgrade(grade, clas);
-
-        for (int i = 1; i <= 7; i++) {
+        /*for (int i = 1; i <= 7; i++) {
             for (int j = 1; j <= 5; j++) {
                 tv[i][j].setText(timetable_original[i][j]);
 
             }
-        }
+        }*/
+
+
+
+        ViewModel model=new ViewModelProvider(getActivity()).get(ViewModel.class);
+        model.getTextTable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Log.d(TAG, "onChange: 테이블 "+s);
+                set_table(s);
+            }
+        });
+        model.getTextLunch().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Log.d(TAG, "onChange: 런치");
+                set_lunch(s);
+
+            }
+        });
 
 
         return root;
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("로그", "onCreateView: 홈 온크리에이트");
-    }
-
-
-    private String[][] Array_table() {
+    private String[][] Array_table(String json) {
         String[][] arr = new String[10][8];
 
         for (int i = 0; i <= 7; i++) {//배열 초기화
@@ -522,15 +377,10 @@ public class HomeFragment extends Fragment {
                 arr[i][j] = " ";//arr[가로줄][교시]
             }
         }
-
-        SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-        String tablese = mPreferences.getString("table_json", "");
-
         try {//json 문자열을 배열에 넣음
-            JSONArray jarray1 = new JSONObject(tablese).getJSONArray("hisTimetable");
+            JSONArray jarray1 = new JSONObject(json).getJSONArray("hisTimetable");
             JSONObject jobject1 = jarray1.getJSONObject(1);
             JSONArray jarray2 = jobject1.getJSONArray("row");
-
             for (int i = 0; i <= 35; i++) {
                 try {
                     JSONObject jobject2 = jarray2.getJSONObject(i);
@@ -559,20 +409,21 @@ public class HomeFragment extends Fragment {
         return arr;
     }
 
-    private String[][] Array_lunch() {
+    private String[][] Array_lunch(String json) {
+
         String[][] arraysum = new String[35][3];
         String[][] arr = new String[14][40];
 
         int 몇일을파싱 = 25;
-        SharedPreferences mPreferences = getActivity().getSharedPreferences(SharedPrefFile, 0);
-        String lunch_json = mPreferences.getString("lunch_json", "");
-        for (int i = 0; i <= 30; i++) {//배열 초기화
+
+        //배열 초기화
+        for (int i = 0; i <= 30; i++) {
             arraysum[i][0] = "0";
             arraysum[i][1] = "0";
         }
 
         try {//json 문자열을 배열에 넣음
-            JSONArray jarray1 = new JSONObject(lunch_json).getJSONArray("mealServiceDietInfo");
+            JSONArray jarray1 = new JSONObject(json).getJSONArray("mealServiceDietInfo");
             JSONObject jobject1 = jarray1.getJSONObject(1);
             JSONArray jarray2 = jobject1.getJSONArray("row");
 
@@ -695,9 +546,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void set_table() {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
-        timetable_item = Array_table();
 
+    private void set_table(String json) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
+        timetable_item = Array_table(json);
         String a = timetable_item[1][1];
         String b = timetable_item[1][2];
         String c = timetable_item[1][3];
@@ -725,10 +576,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void set_lunch() {//저장된 json파일을 급식배열에 넣고 급식 보여줌
+    private void set_lunch(String json) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
 
         int date_number = 30;
-        lunch = Array_lunch();
+        lunch = Array_lunch(json);
         first_lunch_view = 10;
         for (int i = 0; i <= date_number; i++) {
             AddDate add = new AddDate();
@@ -798,15 +649,98 @@ public class HomeFragment extends Fragment {
     }
 
 
+    ActivityResultLauncher<String> mGetlunch = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
 
+                        StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
 
+                        //서브 저장
+                        Date cu_lunch = Calendar.getInstance().getTime();
+                        SimpleDateFormat mrealfulldate_lunch = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+                        String realfulldate_lunch = mrealfulldate_lunch.format(cu_lunch);
+                        StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate_lunch + ".jpg");
+                        UploadTask uploadTask11 = riversRef11.putFile(uri);
 
+                        uploadTask11.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            }
+                        });
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Log.d("로그", "onCreateView: 홈 크리에이티드");
-    }
+                    } catch (Exception e) {
+
+                    }
+                    Log.d(TAG, "onActivityResult: rorororororo" + uri);
+                }
+            });
+
+    ActivityResultLauncher<String> mGetbanner = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        StorageReference riversRef = storageRef.child("banner/" + 1 + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+
+    ActivityResultLauncher<String> mGetcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    try {
+                        InputStream in = getActivity().getContentResolver().openInputStream(uri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
+                        UploadTask uploadTask = riversRef.putFile(uri);
+                        uploadTask.addOnFailureListener(exception ->
+                                Toast.makeText(getActivity(), "사진 업로드 살패", Toast.LENGTH_LONG).show())
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(getActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                                    iv_image.setImageBitmap(img);
+                                });
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+
 
     @Override
     public void onDestroyView() {

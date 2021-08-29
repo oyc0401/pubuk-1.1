@@ -8,62 +8,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Outline;
-import android.graphics.Point;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.oyc0401.pubuk.databinding.ActivityMainBinding;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,6 +39,7 @@ import java.util.Locale;
 
 import method.AddDate;
 import method.parse;
+import method.storage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat mfulldate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
     int fulldate = Integer.parseInt(mfulldate.format(cu));
 
+    public String JsonLunch,JsonTable;
+    public int check=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,27 +64,90 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
+        //급식,시간표
+        table_api tableApi= new table_api();
+        tableApi.execute("3","10");
+        lunch_api lunchApi=new lunch_api();
+        lunchApi.execute(String.valueOf(fulldate));
 
 
+        setNav();
+        setpassword();
+
+    }
+
+
+    public class table_api extends AsyncTask<String, Void, String> {
+        private String receiveMsg;
+        protected void onPreExecute() {
+            Log.d("로그", "table_api 시작");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String param1 = params[0];
+            String param2 = params[1];
+            String fir = AddDate.getCurMonday();
+            String las = AddDate.getCurFriday();
+            receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
+            return receiveMsg;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
+            model.setTextTable(receiveMsg);
+
+        }
+    }
+
+    public class lunch_api extends AsyncTask<String, Void, String> {//급식 json 파일을 Shared에 저장하고 get table,set talbe실행
+        private String receiveMsg;
+        protected void onPreExecute() {
+            Log.d("로그", "lunch_api 시작");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String date1 = params[0];
+            AddDate add = new AddDate();
+            add.setOperands(date1, 0, 0, 30);
+            int date2 = add.get_date();
+            receiveMsg = parse.json("https://open.neis.go.kr/hub/mealServiceDietInfo?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&MLSV_FROM_YMD=" + date1 + "&MLSV_TO_YMD=" + date2);
+            return receiveMsg;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
+            model.setTextLunch(receiveMsg);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void setNav() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 Log.d(TAG, "onCreate:지금 어디 " + navController.getCurrentDestination().toString());
             }
         });
+        Log.d(TAG, "onCreate13: "+JsonLunch);
 
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setOnNavigationItemSelectedListener(item -> {
 
-
-        /*navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     Log.d(TAG, "onNavigationItemSelected: 111");
@@ -143,13 +178,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
             }
             return false;
-        });*/
-
-
-        setpassword();
-
+        });
     }
-
     private void setpassword() {
         String SharedPrefFile = "com.example.android.SharedPreferences";
         SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
@@ -209,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
             tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
         }
     }
-
 
     @Override
     public void onBackPressed() { //뒤로가기 버튼 2초안에 한번 더 누르면 종료

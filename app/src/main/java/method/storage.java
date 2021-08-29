@@ -37,7 +37,6 @@ public class storage extends AppCompatActivity {
 
     private void start() throws ExecutionException, InterruptedException {
 
-
         table_api tableApi=new table_api();
         lunch_api lunchApi=new lunch_api();
         this.json_table=tableApi.execute("3","10").get();
@@ -51,6 +50,20 @@ public class storage extends AppCompatActivity {
     public String getJson_table() throws ExecutionException, InterruptedException {
         start();
         return json_table;
+    }
+
+
+
+    public String getJson_table11(){
+        String param1 ;
+        String param2 ;
+        param1="3";
+        param2="10";
+        String fir = AddDate.getCurMonday();
+        String las = AddDate.getCurFriday();
+        String receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
+        return receiveMsg;
+
     }
 
     private static final String TAG = "로그";
@@ -67,7 +80,6 @@ public class storage extends AppCompatActivity {
             String fir = AddDate.getCurMonday();
             String las = AddDate.getCurFriday();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
-            Log.d(TAG, "doInBackground: "+receiveMsg);
             return receiveMsg;
         }
     }
