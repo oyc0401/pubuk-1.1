@@ -17,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.Dialog;
+import android.app.SharedElementCallback;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,13 +49,21 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "로그";
     long backKeyPressedTime = 0;
     Toast toast;
+    int grade, clas, width, height, LunchTextView_Width, first_lunch_view, Setting_To_Main;
+    int check_oncreate = 0;
+
 
     Date cu = Calendar.getInstance().getTime();
     SimpleDateFormat mfulldate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+    SimpleDateFormat mrealfulldate = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+    SimpleDateFormat mdate = new SimpleDateFormat("dd", Locale.getDefault());
+    SimpleDateFormat mmonth = new SimpleDateFormat("MM", Locale.getDefault());
     int fulldate = Integer.parseInt(mfulldate.format(cu));
+    String realfulldate = mrealfulldate.format(cu);
+    int date = Integer.parseInt(mdate.format(cu));
+    int month = Integer.parseInt(mmonth.format(cu));
 
-    public String JsonLunch,JsonTable;
-    public int check=0;
+
 
 
     @Override
@@ -64,16 +73,64 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        String SharedPrefFile = "com.example.android.SharedPreferences";
+        SharedPreferences mPreferences = this.getSharedPreferences(SharedPrefFile, 0);
+        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+        ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
+
+
         //급식,시간표
+        grade = mPreferences.getInt("grade", 1);
+        clas = mPreferences.getInt("class", 1);
         table_api tableApi= new table_api();
-        tableApi.execute("3","10");
+        tableApi.execute(String.valueOf(grade) ,String.valueOf(clas));
         lunch_api lunchApi=new lunch_api();
         lunchApi.execute(String.valueOf(fulldate));
 
 
         setNav();
-        setpassword();
 
+
+
+
+        setpassword(mPreferences, preferencesEditor, model);
+
+    }
+
+    private void setpassword(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model) {
+        //비번
+        Dialog dl_login = new Dialog(MainActivity.this);// Dialog 초기화
+        dl_login.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
+        dl_login.setContentView(R.layout.dl_login);
+        TextView tv_toolbar = findViewById(R.id.tv_toolbar);
+        tv_toolbar.setOnClickListener(v -> dl_login.show());
+
+        EditText setID = dl_login.findViewById(R.id.setID);
+        Button loginOK = dl_login.findViewById(R.id.loginOK);
+
+        model.setIntLogin(mPreferences.getInt("login",0));
+
+        loginOK.setOnClickListener(v -> {
+            String password = setID.getText().toString();
+
+            if (password.equals("happy")) {
+                model.setIntLogin(10);
+                preferencesEditor.putInt("login",10);
+                Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
+            } else if (password.equals("puzzle24")) {
+                model.setIntLogin(20);
+                preferencesEditor.putInt("login",20);
+                Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
+            } else {
+                model.setIntLogin(0);
+                preferencesEditor.putInt("login",0);
+            }
+            preferencesEditor.apply();
+            Log.d(TAG, password);
+            dl_login.cancel();
+
+        });
+        Log.d(TAG, "onCreate 로그인 코드: " + login);
     }
 
 
@@ -125,25 +182,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
     private void setNav() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 Log.d(TAG, "onCreate:지금 어디 " + navController.getCurrentDestination().toString());
             }
         });
-        Log.d(TAG, "onCreate13: "+JsonLunch);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(item -> {
@@ -180,65 +227,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
-    private void setpassword() {
-        String SharedPrefFile = "com.example.android.SharedPreferences";
-        SharedPreferences mPreferences = getSharedPreferences(SharedPrefFile, 0);
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
 
-        //비번
-        Dialog dl_login = new Dialog(MainActivity.this);// Dialog 초기화
-        dl_login.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
-        dl_login.setContentView(R.layout.dl_login);
 
-        TextView tv_toolbar = findViewById(R.id.tv_toolbar);
-        tv_toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dl_login.show();
-            }
-        });
-
-        TextView tv_time1 = findViewById(R.id.tv_time1);
-        EditText setID = dl_login.findViewById(R.id.setID);
-        Button loginOK = dl_login.findViewById(R.id.loginOK);
-
-        loginOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String password = setID.getText().toString();
-                if (password.equals("happy")) {
-                    login = 10;
-                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
-                    preferencesEditor.putInt("login", 10);
-                    preferencesEditor.apply();
-                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
-                } else if (password.equals("puzzle24")) {
-                    login = 20;
-                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
-                    preferencesEditor.putInt("login", 20);
-                    preferencesEditor.apply();
-
-                    Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
-                } else {
-                    tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
-                    login = 0;
-                    preferencesEditor.putInt("login", 0);
-                    preferencesEditor.apply();
-                }
-                Log.d(TAG, password);
-                dl_login.cancel();
-
-            }
-        });
-        Log.d(TAG, "onCreate 로그인 코드: " + login);
-        if (login == 0) {
-            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_white));
-        } else if (login == 10) {
-            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_blue));
-        } else if (login == 20) {
-            tv_time1.setBackground(ContextCompat.getDrawable(MainActivity.this, time1_black));
-        }
-    }
 
     @Override
     public void onBackPressed() { //뒤로가기 버튼 2초안에 한번 더 누르면 종료

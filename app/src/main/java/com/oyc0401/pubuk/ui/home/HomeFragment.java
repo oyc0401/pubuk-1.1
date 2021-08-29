@@ -1,6 +1,10 @@
 package com.oyc0401.pubuk.ui.home;
 
 
+import static com.oyc0401.pubuk.R.drawable.time1_black;
+import static com.oyc0401.pubuk.R.drawable.time1_blue;
+import static com.oyc0401.pubuk.R.drawable.time1_white;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -346,23 +350,40 @@ public class HomeFragment extends Fragment {
         }*/
 
 
-
+        //사간표, 급식 UI
         ViewModel model=new ViewModelProvider(getActivity()).get(ViewModel.class);
-        model.getTextTable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChange: 테이블 "+s);
-                set_table(s);
-            }
+        model.getTextTable().observe(getViewLifecycleOwner(), s -> {
+            Log.d(TAG, "onChange: 테이블 "+s);
+            set_table(s);
         });
-        model.getTextLunch().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChange: 런치");
-                set_lunch(s);
+        model.getTextLunch().observe(getViewLifecycleOwner(), s -> {
+            Log.d(TAG, "onChange: 런치");
+            set_lunch(s);
+        });
 
+        //로그인 UI
+        model.getlogin().observe(getViewLifecycleOwner(), integer -> {
+            Log.d(TAG, "onChange: 로그인 "+integer);
+            if(integer==0) {
+                login=0;
+                binding.tvTime1.setBackground(ContextCompat.getDrawable(getActivity(), time1_white));
+            }else if(integer==10){
+                login=10;
+                binding.tvTime1.setBackground(ContextCompat.getDrawable(getActivity(), time1_blue));
+            }else if(integer==20){
+                login=20;
+                binding.tvTime1.setBackground(ContextCompat.getDrawable(getActivity(), time1_black));
             }
+
         });
+
+        //급식사진 UI
+        model.getImgLunch().observe(getViewLifecycleOwner(), bitmap -> {
+
+
+
+        });
+
 
 
         return root;
