@@ -30,7 +30,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -86,8 +85,7 @@ public class HomeFragment extends Fragment {
     String dada;
     String TAG = "로그";
 
-    String[][] lunch = new String[14][40];
-    String[][] timetable_item = new String[10][8];
+
     String[][] timetable_original = new String[10][8];
     String[] day = {"", "일", "월", "화", "수", "목", "금", "토"};
 
@@ -224,77 +222,30 @@ public class HomeFragment extends Fragment {
         //뷰모델
         ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
 
-        //사간표, 급식 UI
-        model.getTextTable().observe(getViewLifecycleOwner(), s -> {
-            Log.d(TAG, "onChange: 테이블 " + s);
-            set_table(s);
-        });
-        model.getTextLunch().observe(getViewLifecycleOwner(), s -> {
-            Log.d(TAG, "onChange: 런치");
-            set_lunch(s);
-        });
+        //시간표, 급식 UI
+        model.arr_table.observe(getViewLifecycleOwner(),strings -> set_table(strings));
+        model.arr_lunch.observe(getViewLifecycleOwner(),strings -> set_lunch(strings));
 
         //로그인 UI
-        model.getlogin().observe(getViewLifecycleOwner(), integer -> {
-            Log.d(TAG, "onChange: 로그인 " + integer);
-            if (integer == 0) {
-                login = 0;
-                binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_white));
-            } else if (integer == 10) {
-                login = 10;
-                binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_blue));
-            } else if (integer == 20) {
-                login = 20;
-                binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_black));
-            }
-
-        });
+        model.login.observe(getViewLifecycleOwner(), integer -> set_login(integer));
 
         //급식사진 UI
-        model.getImgLunch().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivImage;
-
-            Glide.with(requireActivity()).load(uri).into(iv);
-            //모양설정
-            iv.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setRoundRect(0, 0, iv.getWidth(), iv.getHeight(), 30);
-                }
-            });
-            iv.setClipToOutline(true);
-
-        });
+        model.img_lunch.observe(getViewLifecycleOwner(), uri -> set_img_lunch(uri));
 
         //배너 UI
-        model.getImgBanner().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivBanner;
-            Glide.with(requireActivity()).load(uri).into(iv);
-        });
+        model.img_banner.observe(getViewLifecycleOwner(), this::set_img_banner);
 
         //대회사진1 UI
-        model.getImgCon1().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivCongress1;
-            Glide.with(requireActivity()).load(uri).into(iv);
-        });
+        model.img_con1.observe(getViewLifecycleOwner(), this::setImgCon1);
 
         //대회사진2 UI
-        model.getImgCon2().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivCongress2;
-            Glide.with(requireActivity()).load(uri).into(iv);
-        });
+        model.img_con2.observe(getViewLifecycleOwner(), this::setImgCon2);
 
         //대회사진3 UI
-        model.getImgCon3().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivCongress3;
-            Glide.with(requireActivity()).load(uri).into(iv);
-        });
+        model.img_con3.observe(getViewLifecycleOwner(), this::setImgCon3);
 
         //대회사진4 UI
-        model.getImgCon4().observe(getViewLifecycleOwner(), uri -> {
-            ImageView iv = binding.ivCongress4;
-            Glide.with(requireActivity()).load(uri).into(iv);
-        });
+        model.img_con4.observe(getViewLifecycleOwner(), this::setImgCon4);
 
 
 
@@ -305,100 +256,9 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private String[][] Array_table(String json) {
-        String[][] arr = new String[10][8];
 
-        for (int i = 0; i <= 7; i++) {//배열 초기화
-            for (int j = 0; j <= 7; j++) {
-                arr[i][j] = " ";//arr[가로줄][교시]
-            }
-        }
-        try {//json 문자열을 배열에 넣음
-            JSONArray jarray1 = new JSONObject(json).getJSONArray("hisTimetable");
-            JSONObject jobject1 = jarray1.getJSONObject(1);
-            JSONArray jarray2 = jobject1.getJSONArray("row");
-            for (int i = 0; i <= 35; i++) {
-                try {
-                    JSONObject jobject2 = jarray2.getJSONObject(i);
-                    String ALL_TI_YMD = jobject2.optString("ALL_TI_YMD");
-                    String PERIO = jobject2.optString("PERIO");
-                    String ITRT_CNTNT = jobject2.optString("ITRT_CNTNT");
-                    int k = 0;
-                    int a = Integer.parseInt(ALL_TI_YMD);
-                    int b = Integer.parseInt(AddDate.getCurFriday());
-                    AddDate add = new AddDate();
-                    for (int t = 0; a != b; t++) {
-                        add.setOperands(ALL_TI_YMD, 0, 0, t);
-                        a = add.get_date();
-                        k = t;
-                    }
-                    int difference = 5 - k;
-                    arr[Integer.parseInt(PERIO)][difference] = ITRT_CNTNT;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return arr;
-    }
 
-    private String[][] Array_lunch(String json) {
-
-        String[][] arraysum = new String[35][3];
-        String[][] arr = new String[14][40];
-
-        int how_much_parsing = 25;
-
-        //배열 초기화
-        for (int i = 0; i <= 30; i++) {
-            arraysum[i][0] = "0";
-            arraysum[i][1] = "0";
-        }
-
-        try {//json 문자열을 배열에 넣음
-            JSONArray jarray1 = new JSONObject(json).getJSONArray("mealServiceDietInfo");
-            JSONObject jobject1 = jarray1.getJSONObject(1);
-            JSONArray jarray2 = jobject1.getJSONArray("row");
-
-            for (int i = 0; i <= how_much_parsing; i++) {
-                JSONObject jobject2 = jarray2.getJSONObject(i);
-                String MLSV_YMD = jobject2.optString("MLSV_YMD");
-                String DDISH_NM = jobject2.optString("DDISH_NM");
-                DDISH_NM = DDISH_NM.replace("<br/>", "\n");//문자열 바꾸기
-                DDISH_NM = DDISH_NM.replace("-북고", "");//문자열 바꾸기
-                DDISH_NM = DDISH_NM.replace(".", "");//문자열 바꾸기
-
-                for (int j = 0; j <= 20; j++) {
-                    DDISH_NM = DDISH_NM.replace(String.valueOf(j), "");//알레르기 문자열 바꾸기
-                }
-                arraysum[i][0] = MLSV_YMD;
-                arraysum[i][1] = DDISH_NM;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //arr배열 초기화 (앞으로 2달만 설정)
-        for (int i = 0; i <= 31; i++) {
-            for (int j = month; j <= month + 2; j++) {
-                arr[j][i] = "급식 정보가 없습니다.";
-            }
-        }
-
-        for (int i = 0; i <= how_much_parsing; i++) {//배열에 담긴 점심을 분류해서 lunch에 옮김
-            int oridate = Integer.parseInt(arraysum[i][0]);
-            if (oridate != 0) {
-                int lunch_month = ((oridate - 20210000) / 100);
-                int lunch_date = (oridate - 20210000 - lunch_month * 100);
-                arr[lunch_month][lunch_date] = arraysum[i][1];
-
-            }
-        }
-        return arr;
-    }
 
     private String[][] Array_tableOriginal(int grade, int clas) {
         String[][] arr = new String[10][8];
@@ -455,78 +315,11 @@ public class HomeFragment extends Fragment {
         return arr;
     }
 
-    private void set_perform() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(grade + "_" + clas);
-
-        TextView tv_perform = binding.tvPerformTitle;
-        String perform_title_name = grade + "학년 " + clas + "반 일정";
-        tv_perform.setText(perform_title_name);
-        EditText et_perfomance = binding.etPerformance;
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                //Log.d("로그", "Value is: " + value);
-                et_perfomance.setText(value);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.w("로그", "Failed to read value.", error.toException());
-            }
-        });
-    }
-
-    private void set_table(String json) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
-        timetable_item = Array_table(json);
-        String a = timetable_item[1][1];
-        String b = timetable_item[1][2];
-        String c = timetable_item[1][3];
-        String d = timetable_item[1][4];
-        String e = timetable_item[1][5];
 
 
-        if ((!a.equals(" ")) | (!b.equals(" ")) | (!c.equals(" ")) | (!d.equals(" ")) | (!e.equals(" "))) {
-            //Log.d("로그-성공!", a);
-            for (int i = 1; i <= 7; i++) {//시간표 설정
-                for (int j = 1; j <= 5; j++) {
-                    tv[i][j].setText(timetable_item[i][j]);
-                    tv[i][j].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    if (!timetable_item[i][j].equals(timetable_original[i][j])) {
-                        tv[i][j].setBackgroundColor(Color.parseColor("#FFFDE7"));
-                    }
-
-                }
-            }
-        }
 
 
-    }
-
-    private void set_lunch(String json) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
-
-        int date_number = 30;
-        lunch = Array_lunch(json);
-        first_lunch_view = 10;
-        for (int i = 0; i <= date_number; i++) {
-            AddDate add = new AddDate();
-            add.setOperands(String.valueOf(fulldate), 0, 0, i);
-
-            int addDay = add.get_day();
-            int addDate = add.get_date();
-
-            int lunch_month = ((addDate - 20210000) / 100);
-            int lunch_date = (addDate - 20210000 - lunch_month * 100);
-            createtv(lunch_month, lunch_date, addDay);
-        }
-    }
-
-    public void createtv(int b, int c, int daynum) {//createtv(7,15);=7월 15일급식출력
+    public void createtv(int b, int c, int daynum, String[][] lunch_array) {//createtv(7,15);=7월 15일급식출력
         LinearLayout lunch_menu_linear = new LinearLayout(requireActivity().getApplicationContext());
         TextView tv_lunch_date = new TextView(requireActivity().getApplicationContext());
         TextView tv_lunch = new TextView(requireActivity().getApplicationContext());
@@ -538,7 +331,7 @@ public class HomeFragment extends Fragment {
         tv_lunch_date.setTextSize(13);
         tv_lunch_date.setTextColor(Color.rgb(0, 0, 0));
 
-        tv_lunch.setText(lunch[b][c]);
+        tv_lunch.setText(lunch_array[b][c]);
         tv_lunch.setTextSize(13);
         tv_lunch.setTextColor(Color.rgb(0, 0, 0));
 
@@ -581,6 +374,7 @@ public class HomeFragment extends Fragment {
         lunch_menu_linear.addView(tv_lunch);
     }
 
+
     //파이어베이스에 사진 저장
     ActivityResultLauncher<String> Setlunch = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         try {
@@ -589,7 +383,7 @@ public class HomeFragment extends Fragment {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
                 ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.setUriLunch(uri);
+                model.img_lunch.setValue(uri);
             });
 
             //서브 저장
@@ -612,7 +406,7 @@ public class HomeFragment extends Fragment {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
                 ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.setUriBanner(uri);
+                model.img_banner.setValue(uri);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -626,7 +420,7 @@ public class HomeFragment extends Fragment {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
                 ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.setUriCon1(uri);
+                model.img_con1.setValue(uri);
             });
 
         } catch (Exception e) {
@@ -642,5 +436,131 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         Log.d("로그", "onCreateView: 홈 디스트로이");
         binding = null;
+    }
+
+
+    private void set_table(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
+
+        String a = array[1][1];
+        String b = array[1][2];
+        String c = array[1][3];
+        String d = array[1][4];
+        String e = array[1][5];
+
+        if ((!a.equals(" ")) | (!b.equals(" ")) | (!c.equals(" ")) | (!d.equals(" ")) | (!e.equals(" "))) {
+            //Log.d("로그-성공!", a);
+            for (int i = 1; i <= 7; i++) {//시간표 설정
+                for (int j = 1; j <= 5; j++) {
+                    tv[i][j].setText(array[i][j]);
+                    tv[i][j].setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    if (!array[i][j].equals(timetable_original[i][j])) {
+                        tv[i][j].setBackgroundColor(Color.parseColor("#FFFDE7"));
+                    }
+
+                }
+            }
+        }
+
+
+    }
+
+    private void set_lunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
+
+        int date_number = 30;
+        first_lunch_view = 10;
+        for (int i = 0; i <= date_number; i++) {
+            AddDate add = new AddDate();
+            add.setOperands(String.valueOf(fulldate), 0, 0, i);
+
+            int addDay = add.get_day();
+            int addDate = add.get_date();
+
+            int lunch_month = ((addDate - 20210000) / 100);
+            int lunch_date = (addDate - 20210000 - lunch_month * 100);
+            createtv(lunch_month, lunch_date, addDay,array);
+        }
+    }
+
+    private void set_img_banner(Uri uri) {
+        ImageView iv;
+        iv = binding.ivBanner;
+        Glide.with(requireActivity()).load(uri).into(iv);
+    }
+
+    private void set_img_lunch(Uri uri) {
+        ImageView iv = binding.ivImage;
+
+        Glide.with(requireActivity()).load(uri).into(iv);
+        //모양설정
+        iv.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, iv.getWidth(), iv.getHeight(), 30);
+            }
+        });
+        iv.setClipToOutline(true);
+    }
+
+    private void set_login(Integer integer) {
+        Log.d(TAG, "onChange: 로그인 " + integer);
+        if (integer == 0) {
+            login = 0;
+            binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_white));
+        } else if (integer == 10) {
+            login = 10;
+            binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_blue));
+        } else if (integer == 20) {
+            login = 20;
+            binding.tvTime1.setBackground(ContextCompat.getDrawable(requireActivity(), time1_black));
+        }
+    }
+
+    private void set_perform() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(grade + "_" + clas);
+
+        TextView tv_perform = binding.tvPerformTitle;
+        String perform_title_name = grade + "학년 " + clas + "반 일정";
+        tv_perform.setText(perform_title_name);
+        EditText et_perfomance = binding.etPerformance;
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                //Log.d("로그", "Value is: " + value);
+                et_perfomance.setText(value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w("로그", "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+
+    private void setImgCon1(Uri uri) {
+        ImageView iv;
+        iv = binding.ivCongress1;
+        Glide.with(requireActivity()).load(uri).into(iv);
+    }
+
+    private void setImgCon2(Uri uri) {
+        ImageView iv = binding.ivCongress2;
+        Glide.with(requireActivity()).load(uri).into(iv);
+    }
+
+    private void setImgCon3(Uri uri) {
+        ImageView iv = binding.ivCongress3;
+        Glide.with(requireActivity()).load(uri).into(iv);
+    }
+
+    private void setImgCon4(Uri uri) {
+        ImageView iv = binding.ivCongress4;
+        Glide.with(requireActivity()).load(uri).into(iv);
     }
 }

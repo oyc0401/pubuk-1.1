@@ -46,6 +46,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.oyc0401.pubuk.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -79,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
     int month = Integer.parseInt(mmonth.format(cu));
 
 
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,32 +111,32 @@ public class MainActivity extends AppCompatActivity {
         //급식사진 uri 뷰모델에 저장
         String lunch_filename = "lunch_menu/" + fulldate + ".jpg";
         StorageReference subp = storageRef.child(lunch_filename);
-        subp.getDownloadUrl().addOnSuccessListener(model::setUriLunch);
+        subp.getDownloadUrl().addOnSuccessListener(uri ->model.img_lunch.setValue(uri));
 
         //배너사진 uri 뷰모델에 저장
         String banner_filename = "banner/" + 1 + ".jpg";
         StorageReference subp_banner = storageRef.child(banner_filename);
-        subp_banner.getDownloadUrl().addOnSuccessListener(model::setUriBanner);
+        subp_banner.getDownloadUrl().addOnSuccessListener(uri -> model.img_banner.setValue(uri));
 
         //대회사진1 uri 뷰모델에 저장
         String congress_filename1 = "congress/" + 1 + ".jpg";
         StorageReference subp_congress1 = storageRef.child(congress_filename1);
-        subp_congress1.getDownloadUrl().addOnSuccessListener(model::setUriCon1);
+        subp_congress1.getDownloadUrl().addOnSuccessListener(uri -> model.img_con1.setValue(uri));
 
         //대회사진2 uri 뷰모델에 저장
         String congress_filename2 = "congress/" + 2 + ".jpg";
         StorageReference subp_congress2 = storageRef.child(congress_filename2);
-        subp_congress2.getDownloadUrl().addOnSuccessListener(model::setUriCon2);
+        subp_congress2.getDownloadUrl().addOnSuccessListener(uri -> model.img_con2.setValue(uri));
 
         //대회사진3 uri 뷰모델에 저장
         String congress_filename3 = "congress/" + 3 + ".jpg";
         StorageReference subp_congress3 = storageRef.child(congress_filename3);
-        subp_congress3.getDownloadUrl().addOnSuccessListener(model::setUriCon3);
+        subp_congress3.getDownloadUrl().addOnSuccessListener(uri -> model.img_con3.setValue(uri));
 
         ///대회사진4 uri 뷰모델에 저장
         String congress_filename4 = "congress/" + 4 + ".jpg";
         StorageReference subp_congress4 = storageRef.child(congress_filename4);
-        subp_congress4.getDownloadUrl().addOnSuccessListener(model::setUriCon4);
+        subp_congress4.getDownloadUrl().addOnSuccessListener(uri -> model.img_con4.setValue(uri));
 
 
         //급식,시간표
@@ -157,21 +166,21 @@ public class MainActivity extends AppCompatActivity {
         EditText setID = dl_login.findViewById(R.id.setID);
         Button loginOK = dl_login.findViewById(R.id.loginOK);
 
-        model.setIntLogin(mPreferences.getInt("login", 0));
+        model.login.setValue(mPreferences.getInt("login", 0));
 
         loginOK.setOnClickListener(v -> {
             String password = setID.getText().toString();
 
             if (password.equals("happy")) {
-                model.setIntLogin(10);
+                model.login.setValue(10);
                 preferencesEditor.putInt("login", 10);
                 Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
             } else if (password.equals("puzzle24")) {
-                model.setIntLogin(20);
+                model.login.setValue(20);
                 preferencesEditor.putInt("login", 20);
                 Toast.makeText(MainActivity.this, "로그인", Toast.LENGTH_SHORT).show();
             } else {
-                model.setIntLogin(0);
+                model.login.setValue(0);
                 preferencesEditor.putInt("login", 0);
             }
             preferencesEditor.apply();
@@ -185,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class table_api extends AsyncTask<String, Void, String> {
         private String receiveMsg;
+        private String[][] arr=new String[10][8];
 
         protected void onPreExecute() {
             Log.d("로그", "table_api 시작");
@@ -197,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             String fir = AddDate.getCurMonday();
             String las = AddDate.getCurFriday();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
+            arr=Array_table(receiveMsg);
             return receiveMsg;
         }
 
@@ -204,13 +215,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
-            model.setTextTable(receiveMsg);
-
+            model.table_json.setValue(receiveMsg);
+            model.arr_table.setValue(arr);
         }
     }
 
     public class lunch_api extends AsyncTask<String, Void, String> {//급식 json 파일을 Shared에 저장하고 get table,set talbe실행
         private String receiveMsg;
+        private String[][] arr=new String[14][40];
 
         protected void onPreExecute() {
             Log.d("로그", "lunch_api 시작");
@@ -223,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             add.setOperands(date1, 0, 0, 30);
             int date2 = add.get_date();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/mealServiceDietInfo?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&MLSV_FROM_YMD=" + date1 + "&MLSV_TO_YMD=" + date2);
+            arr=Array_lunch(receiveMsg);
             return receiveMsg;
         }
 
@@ -230,9 +243,105 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
-            model.setTextLunch(receiveMsg);
-
+            model.lunch_json.setValue(receiveMsg);
+            model.arr_lunch.setValue(arr);
         }
+    }
+
+
+    private String[][] Array_table(String json) {
+        String[][] arr = new String[10][8];
+
+        for (int i = 0; i <= 7; i++) {//배열 초기화
+            for (int j = 0; j <= 7; j++) {
+                arr[i][j] = " ";//arr[가로줄][교시]
+            }
+        }
+        try {//json 문자열을 배열에 넣음
+            JSONArray jarray1 = new JSONObject(json).getJSONArray("hisTimetable");
+            JSONObject jobject1 = jarray1.getJSONObject(1);
+            JSONArray jarray2 = jobject1.getJSONArray("row");
+            for (int i = 0; i <= 35; i++) {
+                try {
+                    JSONObject jobject2 = jarray2.getJSONObject(i);
+                    String ALL_TI_YMD = jobject2.optString("ALL_TI_YMD");
+                    String PERIO = jobject2.optString("PERIO");
+                    String ITRT_CNTNT = jobject2.optString("ITRT_CNTNT");
+                    int k = 0;
+                    int a = Integer.parseInt(ALL_TI_YMD);
+                    int b = Integer.parseInt(AddDate.getCurFriday());
+                    AddDate add = new AddDate();
+                    for (int t = 0; a != b; t++) {
+                        add.setOperands(ALL_TI_YMD, 0, 0, t);
+                        a = add.get_date();
+                        k = t;
+                    }
+                    int difference = 5 - k;
+                    arr[Integer.parseInt(PERIO)][difference] = ITRT_CNTNT;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
+    private String[][] Array_lunch(String json) {
+
+        String[][] arraysum = new String[35][3];
+        String[][] arr = new String[14][40];
+
+        int how_much_parsing = 25;
+
+        //배열 초기화
+        for (int i = 0; i <= 30; i++) {
+            arraysum[i][0] = "0";
+            arraysum[i][1] = "0";
+        }
+
+        try {//json 문자열을 배열에 넣음
+            JSONArray jarray1 = new JSONObject(json).getJSONArray("mealServiceDietInfo");
+            JSONObject jobject1 = jarray1.getJSONObject(1);
+            JSONArray jarray2 = jobject1.getJSONArray("row");
+
+            for (int i = 0; i <= how_much_parsing; i++) {
+                JSONObject jobject2 = jarray2.getJSONObject(i);
+                String MLSV_YMD = jobject2.optString("MLSV_YMD");
+                String DDISH_NM = jobject2.optString("DDISH_NM");
+                DDISH_NM = DDISH_NM.replace("<br/>", "\n");//문자열 바꾸기
+                DDISH_NM = DDISH_NM.replace("-북고", "");//문자열 바꾸기
+                DDISH_NM = DDISH_NM.replace(".", "");//문자열 바꾸기
+
+                for (int j = 0; j <= 20; j++) {
+                    DDISH_NM = DDISH_NM.replace(String.valueOf(j), "");//알레르기 문자열 바꾸기
+                }
+                arraysum[i][0] = MLSV_YMD;
+                arraysum[i][1] = DDISH_NM;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //arr배열 초기화 (앞으로 2달만 설정)
+        for (int i = 0; i <= 31; i++) {
+            for (int j = month; j <= month + 2; j++) {
+                arr[j][i] = "급식 정보가 없습니다.";
+            }
+        }
+
+        for (int i = 0; i <= how_much_parsing; i++) {//배열에 담긴 점심을 분류해서 lunch에 옮김
+            int oridate = Integer.parseInt(arraysum[i][0]);
+            if (oridate != 0) {
+                int lunch_month = ((oridate - 20210000) / 100);
+                int lunch_date = (oridate - 20210000 - lunch_month * 100);
+                arr[lunch_month][lunch_date] = arraysum[i][1];
+
+            }
+        }
+        return arr;
     }
 
 
