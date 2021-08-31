@@ -103,14 +103,9 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         onSaveInstanceState(savedInstanceState);
-
-
-
-
+        //기본 설정
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        //SharedPreferences 추가
         String SharedPrefFile = "com.example.android.SharedPreferences";
         SharedPreferences mPreferences = this.requireActivity().getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -127,21 +122,21 @@ public class HomeFragment extends Fragment {
         height = size.y; // 높이구하기
         LunchTextView_Width = width * 3 / 8; // 급식표 사이즈 비율
 
-
-        //실행창/////////////////////////////////////////////////////////
-
+        //뷰모델
+        ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
 
         //기본 시간표 배열
         timetable_original = Array_tableOriginal(grade, clas);
 
-        // 시간표 findViewByIdF 하기
+        // 시간표 findViewById 하기
         for (int i = 1; i <= 7; i++) {
             for (int j = 1; j <= 5; j++) {
                 tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", requireActivity().getPackageName()));
+                tv[i][j].setText(timetable_original[i][j]);
             }
         }
 
-        //시간표가 안보이면 클릭
+        //시간표가 안보이면 클릭 <-설정
         binding.tvTimetable321.setOnClickListener(v -> {
             for (int i = 1; i <= 7; i++) {
                 for (int j = 1; j <= 5; j++) {
@@ -151,11 +146,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         ///학급 일정 설정
-        set_perform();
-        TextView tv_perform = binding.tvPerformTitle;
-        tv_perform.setOnClickListener(v -> {
+        setPerform();
+        binding.tvPerformTitle.setOnClickListener(v -> {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
@@ -165,10 +158,8 @@ public class HomeFragment extends Fragment {
 
         });
 
-
         //사진 클릭 설정
-        String lunch_title_name = month + "월 " + date + "일 급식사진";
-        binding.tvLunchPictureTitle.setText(lunch_title_name);
+        binding.tvLunchPictureTitle.setText(month + "월 " + date + "일 급식사진");
         binding.tvLunchPictureTitle.setOnClickListener(v -> {
             if (login == 10 | login == 20) {
                 Setlunch.launch("image/*");
@@ -211,52 +202,20 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        //기본 시간표 설정하기
-        for (int i = 1; i <= 7; i++) {
-            for (int j = 1; j <= 5; j++) {
-                tv[i][j].setText(timetable_original[i][j]);
-            }
-        }
-
-        //뷰모델
-        ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-
         //시간표, 급식 UI
-        model.arr_table.observe(getViewLifecycleOwner(),strings -> set_table(strings));
-        model.arr_lunch.observe(getViewLifecycleOwner(),strings -> set_lunch(strings));
-
-        //로그인 UI
-        model.login.observe(getViewLifecycleOwner(), integer -> set_login(integer));
-
-        //급식사진 UI
-        model.img_lunch.observe(getViewLifecycleOwner(), uri -> set_img_lunch(uri));
-
-        //배너 UI
-        model.img_banner.observe(getViewLifecycleOwner(), this::set_img_banner);
-
-        //대회사진1 UI
+        model.arr_table.observe(getViewLifecycleOwner(), this::setTable);
+        model.arr_lunch.observe(getViewLifecycleOwner(), this::setLunch);
+        model.login.observe(getViewLifecycleOwner(), this::setLogin);
+        model.img_lunch.observe(getViewLifecycleOwner(), this::setImgLunch);
+        model.img_banner.observe(getViewLifecycleOwner(), this::setImgBanner);
         model.img_con1.observe(getViewLifecycleOwner(), this::setImgCon1);
-
-        //대회사진2 UI
         model.img_con2.observe(getViewLifecycleOwner(), this::setImgCon2);
-
-        //대회사진3 UI
         model.img_con3.observe(getViewLifecycleOwner(), this::setImgCon3);
-
-        //대회사진4 UI
         model.img_con4.observe(getViewLifecycleOwner(), this::setImgCon4);
 
 
-
-
         return root;
-
-
-
     }
-
-
 
 
 
@@ -314,10 +273,6 @@ public class HomeFragment extends Fragment {
 
         return arr;
     }
-
-
-
-
 
     public void createtv(int b, int c, int daynum, String[][] lunch_array) {//createtv(7,15);=7월 15일급식출력
         LinearLayout lunch_menu_linear = new LinearLayout(requireActivity().getApplicationContext());
@@ -439,7 +394,8 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void set_table(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
+
+    private void setTable(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
 
         String a = array[1][1];
         String b = array[1][2];
@@ -464,7 +420,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void set_lunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
+    private void setLunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
 
         int date_number = 30;
         first_lunch_view = 10;
@@ -481,13 +437,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void set_img_banner(Uri uri) {
-        ImageView iv;
-        iv = binding.ivBanner;
-        Glide.with(requireActivity()).load(uri).into(iv);
-    }
-
-    private void set_img_lunch(Uri uri) {
+    private void setImgLunch(Uri uri) {
         ImageView iv = binding.ivImage;
 
         Glide.with(requireActivity()).load(uri).into(iv);
@@ -501,7 +451,13 @@ public class HomeFragment extends Fragment {
         iv.setClipToOutline(true);
     }
 
-    private void set_login(Integer integer) {
+    private void setImgBanner(Uri uri) {
+        ImageView iv;
+        iv = binding.ivBanner;
+        Glide.with(requireActivity()).load(uri).into(iv);
+    }
+
+    private void setLogin(Integer integer) {
         Log.d(TAG, "onChange: 로그인 " + integer);
         if (integer == 0) {
             login = 0;
@@ -515,7 +471,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void set_perform() {
+    private void setPerform() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
@@ -541,7 +497,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 
     private void setImgCon1(Uri uri) {
         ImageView iv;
