@@ -10,4 +10,5 @@
 
     <dimen name="textsize">12sp</dimen>
     <dimen name="titleText_size">17sp</dimen>
+    <dimen name="timetext">15sp</dimen>
 </resources>

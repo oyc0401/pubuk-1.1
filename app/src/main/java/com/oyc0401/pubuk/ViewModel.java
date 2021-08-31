@@ -15,7 +15,7 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
 
 
     public ViewModel() {
-        arr_table =new MutableLiveData<>();
+        arr_table =new MutableLiveData<>();// arr_table[교시][요일]
         arr_lunch =new MutableLiveData<>();
         arrTodayTimeTable=new MutableLiveData<>();
 

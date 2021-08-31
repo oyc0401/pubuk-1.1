@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Pubuk"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LunchView"
+            android:exported="true" />
+        <activity
             android:name=".dada"
             android:exported="true" />
         <activity

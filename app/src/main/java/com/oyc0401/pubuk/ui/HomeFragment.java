@@ -1,6 +1,9 @@
 package com.oyc0401.pubuk.ui;
 
 
+import static com.oyc0401.pubuk.R.drawable.bg_hack_botton_left_touch;
+import static com.oyc0401.pubuk.R.drawable.layout_tablebackground4;
+import static com.oyc0401.pubuk.R.drawable.layout_tablebackground4_yellow;
 import static com.oyc0401.pubuk.R.drawable.time1_black;
 import static com.oyc0401.pubuk.R.drawable.time1_blue;
 import static com.oyc0401.pubuk.R.drawable.time1_white;
@@ -43,7 +46,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.oyc0401.pubuk.LunchView;
 import com.oyc0401.pubuk.R;
+import com.oyc0401.pubuk.ScrollingActivity111;
 import com.oyc0401.pubuk.ViewModel;
 import com.oyc0401.pubuk.databinding.FragmentHomeBinding;
 
@@ -67,17 +72,13 @@ public class HomeFragment extends Fragment {
 
 
     int grade, clas, width, height, LunchTextView_Width, login, first_lunch_view, Setting_To_Main;
-    int check_oncreate = 0;
-    private long backKeyPressedTime = 0;
-    private Toast toast;
 
     Date cu = Calendar.getInstance().getTime();
     SimpleDateFormat mfulldate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-    SimpleDateFormat mrealfulldate = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
     SimpleDateFormat mdate = new SimpleDateFormat("dd", Locale.getDefault());
     SimpleDateFormat mmonth = new SimpleDateFormat("MM", Locale.getDefault());
     int fulldate = Integer.parseInt(mfulldate.format(cu));
-    String realfulldate = mrealfulldate.format(cu);
+
     int date = Integer.parseInt(mdate.format(cu));
     int month = Integer.parseInt(mmonth.format(cu));
 
@@ -91,11 +92,12 @@ public class HomeFragment extends Fragment {
 
 
     TextView[][] tv = new TextView[10][10];
-    ImageView iv_image, iv_banner, iv_congress, iv_congress2, iv_congress3, iv_congress4;//이미지
+    TextView[] times = new TextView[10];
 
-    Dialog dl_login; // 커스텀 다이얼로그
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
+
+    View root;
 
 
 /////////////////////////////////////////
@@ -105,7 +107,7 @@ public class HomeFragment extends Fragment {
         onSaveInstanceState(savedInstanceState);
         //기본 설정
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
         String SharedPrefFile = "com.example.android.SharedPreferences";
         SharedPreferences mPreferences = this.requireActivity().getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -129,12 +131,7 @@ public class HomeFragment extends Fragment {
         timetable_original = Array_tableOriginal(grade, clas);
 
         // 시간표 findViewById 하기
-        for (int i = 1; i <= 7; i++) {
-            for (int j = 1; j <= 5; j++) {
-                tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", requireActivity().getPackageName()));
-                tv[i][j].setText(timetable_original[i][j]);
-            }
-        }
+        setBasicTimetable();
 
         //시간표가 안보이면 클릭 <-설정
         binding.tvTimetable321.setOnClickListener(v -> {
@@ -165,6 +162,7 @@ public class HomeFragment extends Fragment {
                 Setlunch.launch("image/*");
             }
         });
+
         binding.memo.setOnClickListener(v -> {
             if (login == 20) {
                 Setbanner.launch("image/*");
@@ -202,11 +200,42 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //시간표, 급식 UI
         model.arr_table.observe(getViewLifecycleOwner(), this::setTable);
         model.arr_lunch.observe(getViewLifecycleOwner(), this::setLunch);
         model.login.observe(getViewLifecycleOwner(), this::setLogin);
-        model.img_lunch.observe(getViewLifecycleOwner(), this::setImgLunch);
+        model.img_lunch.observe(getViewLifecycleOwner(), uri -> {
+            setImgLunch(uri);
+
+            binding.ivImage.setOnClickListener(v -> {
+                Intent intent = new Intent(requireActivity(), LunchView.class);
+                intent.putExtra("uri",String.valueOf(uri));
+                startActivity(intent);
+            });
+
+        });
         model.img_banner.observe(getViewLifecycleOwner(), this::setImgBanner);
         model.img_con1.observe(getViewLifecycleOwner(), this::setImgCon1);
         model.img_con2.observe(getViewLifecycleOwner(), this::setImgCon2);
@@ -216,6 +245,7 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
 
 
 
@@ -274,6 +304,173 @@ public class HomeFragment extends Fragment {
         return arr;
     }
 
+
+
+
+    //파이어베이스에 사진 저장
+    ActivityResultLauncher<String> Setlunch = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        try {
+            StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
+            UploadTask uploadTask = riversRef.putFile(uri);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
+                model.img_lunch.setValue(uri);
+            });
+
+            //서브 저장
+            Date cu_lunch = Calendar.getInstance().getTime();
+            SimpleDateFormat mrealfulldate = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+            String realfulldate = mrealfulldate.format(cu_lunch);
+
+            StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate + ".jpg");
+            UploadTask uploadTask11 = riversRef11.putFile(uri);
+            uploadTask11.addOnSuccessListener(taskSnapshot -> {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
+    ActivityResultLauncher<String> Setbanner = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        try {
+            StorageReference riversRef = storageRef.child("banner/" + 1 + ".jpg");
+            UploadTask uploadTask = riversRef.putFile(uri);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
+                model.img_banner.setValue(uri);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
+    ActivityResultLauncher<String> Setcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        try {
+            StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
+            UploadTask uploadTask = riversRef.putFile(uri);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
+                model.img_con1.setValue(uri);
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("로그", "onCreateView: 홈 디스트로이");
+        binding = null;
+    }
+
+
+    private void setBasicTimetable() {
+        AddDate addDate = new AddDate();
+        int dayday = addDate.get_day() - 1;
+
+        for (int i = 1; i <= 7; i++) {
+            for (int j = 1; j <= 5; j++) {
+                tv[i][j] = root.findViewById(getResources().getIdentifier("tt" + (i) + "_" + (j), "id", requireActivity().getPackageName()));
+                tv[i][j].setText(timetable_original[i][j]);
+            }
+        }
+        for (int i = 1; i <= 7; i++) {
+            times[i] = root.findViewById(getResources().getIdentifier("time" + (i), "id", requireActivity().getPackageName()));
+            times[i].setText(i + "교시: " + timetable_original[i][dayday]);
+        }
+    }
+
+    private void setTable(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
+
+        String a = array[1][1];
+        String b = array[1][2];
+        String c = array[1][3];
+        String d = array[1][4];
+        String e = array[1][5];
+
+
+        if ((!a.equals(" ")) | (!b.equals(" ")) | (!c.equals(" ")) | (!d.equals(" ")) | (!e.equals(" "))) {
+            //Log.d("로그-성공!", a);
+            for (int i = 1; i <= 7; i++) {//시간표 설정
+                for (int j = 1; j <= 5; j++) {
+                    tv[i][j].setText(array[i][j]);
+                    tv[i][j].setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    if(i==7&&j==5) tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4));
+                    if (!array[i][j].equals(timetable_original[i][j])) {
+                        tv[i][j].setBackgroundColor(Color.parseColor("#FFFDE7"));
+                        if(i==7&&j==5) tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4_yellow));
+                    }
+
+                }
+            }
+
+            AddDate addDate = new AddDate();
+            int dayday = addDate.get_day() - 1;
+
+            for (int i = 1; i <= 7; i++) {
+                times[i].setText(i + "교시: " + array[i][dayday]);
+                if (!array[i][dayday].equals(timetable_original[i][dayday])) {
+                    times[i].setTextColor(Color.parseColor("#304FFE"));
+
+                }
+            }
+
+
+            Log.d(TAG, "setTableㅇㅁㄴㅇㅁㄴ: " + dayday + array[1][dayday]);
+        }
+
+
+    }
+
+    private void setLunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
+
+        int date_number = 30;
+        first_lunch_view = 10;
+        for (int i = 0; i <= date_number; i++) {
+            AddDate add = new AddDate();
+            add.setOperands(String.valueOf(fulldate), 0, 0, i);
+
+            int addDay = add.get_day();
+            int addDate = add.get_date();
+
+            int lunch_month = ((addDate - 20210000) / 100);
+            int lunch_date = (addDate - 20210000 - lunch_month * 100);
+            createtv(lunch_month, lunch_date, addDay, array);
+        }
+
+    }
+
+    private void create_secondtv(String[] strings) {
+        // create_secondtv(array[month]); setLunch 함수안에 이렇게 치면 대용
+
+
+        TextView tv_lunch = new TextView(requireActivity().getApplicationContext());
+
+
+        tv_lunch.setText(strings[date]);
+        tv_lunch.setTextSize(15);
+        tv_lunch.setTextColor(Color.rgb(0, 0, 0));
+
+
+        LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv_lunch.setLayoutParams(par);
+
+        tv_lunch.setWidth(LunchTextView_Width);
+        tv_lunch.setPadding(20, 30, 20, 0);
+        tv_lunch.setGravity(Gravity.START);
+        tv_lunch.setLineSpacing(0, (float) 1.1);
+
+        LinearLayout lunchLinear = requireActivity().findViewById(R.id.lunchLinear);
+        lunchLinear.setGravity(Gravity.CENTER_HORIZONTAL);
+        lunchLinear.addView(tv_lunch);
+    }
+
     public void createtv(int b, int c, int daynum, String[][] lunch_array) {//createtv(7,15);=7월 15일급식출력
         LinearLayout lunch_menu_linear = new LinearLayout(requireActivity().getApplicationContext());
         TextView tv_lunch_date = new TextView(requireActivity().getApplicationContext());
@@ -281,7 +478,7 @@ public class HomeFragment extends Fragment {
 
         dada = day[daynum];
         //Log.d("로그-출력요일",dada);
-        String tv_lunch_date_text=b + "월 " + c + "일 (" + dada + ")";
+        String tv_lunch_date_text = b + "월 " + c + "일 (" + dada + ")";
         tv_lunch_date.setText(tv_lunch_date_text);
         tv_lunch_date.setTextSize(13);
         tv_lunch_date.setTextColor(Color.rgb(0, 0, 0));
@@ -289,6 +486,7 @@ public class HomeFragment extends Fragment {
         tv_lunch.setText(lunch_array[b][c]);
         tv_lunch.setTextSize(13);
         tv_lunch.setTextColor(Color.rgb(0, 0, 0));
+        tv_lunch.setLineSpacing(0, (float) 1.1);
 
 
         LinearLayout.LayoutParams Linear_par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -329,116 +527,9 @@ public class HomeFragment extends Fragment {
         lunch_menu_linear.addView(tv_lunch);
     }
 
-
-    //파이어베이스에 사진 저장
-    ActivityResultLauncher<String> Setlunch = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        try {
-            StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
-            UploadTask uploadTask = riversRef.putFile(uri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.img_lunch.setValue(uri);
-            });
-
-            //서브 저장
-            Date cu_lunch = Calendar.getInstance().getTime();
-            SimpleDateFormat mrealfulldate_lunch = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
-            String realfulldate_lunch = mrealfulldate_lunch.format(cu_lunch);
-            StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate_lunch + ".jpg");
-            UploadTask uploadTask11 = riversRef11.putFile(uri);
-            uploadTask11.addOnSuccessListener(taskSnapshot -> {
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
-
-    ActivityResultLauncher<String> Setbanner = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        try {
-            StorageReference riversRef = storageRef.child("banner/" + 1 + ".jpg");
-            UploadTask uploadTask = riversRef.putFile(uri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.img_banner.setValue(uri);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
-
-    ActivityResultLauncher<String> Setcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        try {
-            StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
-            UploadTask uploadTask = riversRef.putFile(uri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.img_con1.setValue(uri);
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
-
-
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("로그", "onCreateView: 홈 디스트로이");
-        binding = null;
-    }
-
-
-
-    private void setTable(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
-
-        String a = array[1][1];
-        String b = array[1][2];
-        String c = array[1][3];
-        String d = array[1][4];
-        String e = array[1][5];
-
-        if ((!a.equals(" ")) | (!b.equals(" ")) | (!c.equals(" ")) | (!d.equals(" ")) | (!e.equals(" "))) {
-            //Log.d("로그-성공!", a);
-            for (int i = 1; i <= 7; i++) {//시간표 설정
-                for (int j = 1; j <= 5; j++) {
-                    tv[i][j].setText(array[i][j]);
-                    tv[i][j].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    if (!array[i][j].equals(timetable_original[i][j])) {
-                        tv[i][j].setBackgroundColor(Color.parseColor("#FFFDE7"));
-                    }
-
-                }
-            }
-        }
-
-
-    }
-
-    private void setLunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
-
-        int date_number = 30;
-        first_lunch_view = 10;
-        for (int i = 0; i <= date_number; i++) {
-            AddDate add = new AddDate();
-            add.setOperands(String.valueOf(fulldate), 0, 0, i);
-
-            int addDay = add.get_day();
-            int addDate = add.get_date();
-
-            int lunch_month = ((addDate - 20210000) / 100);
-            int lunch_date = (addDate - 20210000 - lunch_month * 100);
-            createtv(lunch_month, lunch_date, addDay,array);
-        }
-    }
-
     private void setImgLunch(Uri uri) {
         ImageView iv = binding.ivImage;
+
 
         Glide.with(requireActivity()).load(uri).into(iv);
         //모양설정
