@@ -13,17 +13,34 @@
         android:id="@+id/bigLunchView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bigLunchViewText"
+        app:layout_constraintBottom_toTopOf="@+id/lunchviewlinear"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/bigLunchViewText"
+    <LinearLayout
+        android:id="@+id/lunchviewlinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="급식메뉴는 이거얌" />
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bigLunchViewdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/bigLunchViewText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
 
 
 

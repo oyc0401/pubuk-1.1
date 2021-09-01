@@ -107,44 +107,13 @@ public class MainActivity extends AppCompatActivity {
         StorageReference storageRef = storage.getReference();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        oncreate(mPreferences, preferencesEditor, model, storageRef);
+        functionCreate(mPreferences, preferencesEditor, model, storageRef);
 
     }
 
-    private void oncreate(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model, StorageReference storageRef) {
+    private void functionCreate(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model, StorageReference storageRef) {
         //급식사진 uri 뷰모델에 저장
-        String lunch_filename = "lunch_menu/" + fulldate + ".jpg";
+        String lunch_filename = "lunch_menu/1.1.3_"+ fulldate + ".jpg";
         StorageReference subp = storageRef.child(lunch_filename);
         subp.getDownloadUrl().addOnSuccessListener(uri -> model.img_lunch.setValue(uri));
 

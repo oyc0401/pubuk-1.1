@@ -46,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.oyc0401.pubuk.LunchSearch;
 import com.oyc0401.pubuk.LunchView;
 import com.oyc0401.pubuk.R;
 import com.oyc0401.pubuk.ScrollingActivity111;
@@ -127,6 +128,27 @@ public class HomeFragment extends Fragment {
         //뷰모델
         ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
 
+
+
+
+
+
+
+        binding.lunchSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), LunchSearch.class);
+            startActivity(intent);
+        });
+
+
+
+
+
+
+
+
+
+
+
         //기본 시간표 배열
         timetable_original = Array_tableOriginal(grade, clas);
 
@@ -162,6 +184,15 @@ public class HomeFragment extends Fragment {
                 Setlunch.launch("image/*");
             }
         });
+
+        //이전 사진 클릭 설정
+        binding.lunchmenutitle.setOnClickListener(v -> {
+            if (login == 10 | login == 20) {
+                Setlunchpre.launch("image/*");
+            }
+        });
+
+
 
         binding.memo.setOnClickListener(v -> {
             if (login == 20) {
@@ -200,22 +231,26 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
         //시간표, 급식 UI
+        Intent intent = new Intent(requireActivity(), LunchView.class);
+
         model.arr_table.observe(getViewLifecycleOwner(), this::setTable);
-        model.arr_lunch.observe(getViewLifecycleOwner(), this::setLunch);
+        model.arr_lunch.observe(getViewLifecycleOwner(), array -> {
+
+            setLunch(array);
+            intent.putExtra("lunchmenu",array[month][date]);
+
+        });
         model.login.observe(getViewLifecycleOwner(), this::setLogin);
         model.img_lunch.observe(getViewLifecycleOwner(), uri -> {
             setImgLunch(uri);
 
             binding.ivImage.setOnClickListener(v -> {
-                Intent intent = new Intent(requireActivity(), LunchView.class);
-                intent.putExtra("uri",String.valueOf(uri));
+
+                intent.putExtra("uri", String.valueOf(uri));
+
+                intent.putExtra("month",month);
+                intent.putExtra("date",date);
                 startActivity(intent);
             });
 
@@ -229,8 +264,6 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
-
-
 
 
     private String[][] Array_tableOriginal(int grade, int clas) {
@@ -289,10 +322,32 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     //파이어베이스에 사진 저장
     ActivityResultLauncher<String> Setlunch = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        try {
+            StorageReference riversRef = storageRef.child("lunch_menu/1.1.3_" + fulldate + ".jpg");
+            UploadTask uploadTask = riversRef.putFile(uri);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
+                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
+                model.img_lunch.setValue(uri);
+            });
+
+            //서브 저장
+            Date cu_lunch = Calendar.getInstance().getTime();
+            SimpleDateFormat mrealfulldate = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss,SSSS", Locale.getDefault());
+            String realfulldate = mrealfulldate.format(cu_lunch);
+
+            StorageReference riversRef11 = storageRef.child("lunch_file/" + realfulldate + ".jpg");
+            UploadTask uploadTask11 = riversRef11.putFile(uri);
+            uploadTask11.addOnSuccessListener(taskSnapshot -> {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
+    ActivityResultLauncher<String> Setlunchpre = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         try {
             StorageReference riversRef = storageRef.child("lunch_menu/" + fulldate + ".jpg");
             UploadTask uploadTask = riversRef.putFile(uri);
@@ -385,10 +440,12 @@ public class HomeFragment extends Fragment {
                 for (int j = 1; j <= 5; j++) {
                     tv[i][j].setText(array[i][j]);
                     tv[i][j].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    if(i==7&&j==5) tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4));
+                    if (i == 7 && j == 5)
+                        tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4));
                     if (!array[i][j].equals(timetable_original[i][j])) {
                         tv[i][j].setBackgroundColor(Color.parseColor("#FFFDE7"));
-                        if(i==7&&j==5) tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4_yellow));
+                        if (i == 7 && j == 5)
+                            tv[7][5].setBackground(ContextCompat.getDrawable(requireActivity(), layout_tablebackground4_yellow));
                     }
 
                 }
