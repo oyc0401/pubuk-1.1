@@ -102,6 +102,33 @@
 
         </LinearLayout>
 
+        <!--오늘의 시간표-->
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/main_item_bacground"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/lunch_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:fontFamily="monospace"
+                android:text="급식 검색"
+                android:textColor="@color/black"
+                android:textSize="@dimen/titleText_size" />
+
+
+
+
+        </LinearLayout>
+
         <!--급식 사진-->
         <LinearLayout
             android:id="@+id/lunchLinear"
