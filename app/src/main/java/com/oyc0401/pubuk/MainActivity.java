@@ -60,6 +60,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Observer;
 
 import method.AddDate;
 import method.parse;
@@ -85,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
     int month = Integer.parseInt(mmonth.format(cu));
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,10 +106,47 @@ public class MainActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        oncreate(mPreferences, preferencesEditor, model, storageRef);
+
+    }
+
+    private void oncreate(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model, StorageReference storageRef) {
         //급식사진 uri 뷰모델에 저장
         String lunch_filename = "lunch_menu/" + fulldate + ".jpg";
         StorageReference subp = storageRef.child(lunch_filename);
-        subp.getDownloadUrl().addOnSuccessListener(uri ->model.img_lunch.setValue(uri));
+        subp.getDownloadUrl().addOnSuccessListener(uri -> model.img_lunch.setValue(uri));
 
         //배너사진 uri 뷰모델에 저장
         String banner_filename = "banner/" + 1 + ".jpg";
@@ -137,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
         StorageReference subp_congress4 = storageRef.child(congress_filename4);
         subp_congress4.getDownloadUrl().addOnSuccessListener(uri -> model.img_con4.setValue(uri));
 
-
         //급식,시간표
         grade = mPreferences.getInt("grade", 1);
         clas = mPreferences.getInt("class", 1);
@@ -148,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
         lunch_api lunchApi = new lunch_api();
         lunchApi.execute(String.valueOf(fulldate));
 
+
         setNav();
         setpassword(mPreferences, preferencesEditor, model);
-
     }
 
 
@@ -190,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     if (!Objects.requireNonNull(navController.getCurrentDestination()).toString().equals("Destination(com.oyc0401.pubuk:id/navigation_dashboard) label=Dashboard class=com.oyc0401.pubuk.ui.DashboardFragment")) {
-                        Intent intent=new Intent(MainActivity.this,ScrollingActivity111.class);
+                        Intent intent = new Intent(MainActivity.this, ScrollingActivity111.class);
                         startActivity(intent);
                         navController.navigate(R.id.navigation_dashboard);
                     }
@@ -246,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class table_api extends AsyncTask<String, Void, String> {
         private String receiveMsg;
-        private String[][] arr=new String[10][8];
+        private String[][] arr = new String[10][8];
 
         protected void onPreExecute() {
             Log.d("로그", "table_api 시작");
@@ -259,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
             String fir = AddDate.getCurMonday();
             String las = AddDate.getCurFriday();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
-            arr=Array_table(receiveMsg);
+            arr = Array_table(receiveMsg);
             return receiveMsg;
         }
 
@@ -269,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
             ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
             model.arr_table.setValue(arr);
         }
-
 
 
         private String[][] Array_table(String json) {
@@ -315,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class lunch_api extends AsyncTask<String, Void, String> {//급식 json 파일을 Shared에 저장하고 get table,set talbe실행
         private String receiveMsg;
-        private String[][] arr=new String[14][40];
+        private String[][] arr = new String[14][40];
 
         protected void onPreExecute() {
             Log.d("로그", "lunch_api 시작");
@@ -328,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
             add.setOperands(date1, 0, 0, 30);
             int date2 = add.get_date();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/mealServiceDietInfo?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&MLSV_FROM_YMD=" + date1 + "&MLSV_TO_YMD=" + date2);
-            arr=Array_lunch(receiveMsg);
+            arr = Array_lunch(receiveMsg);
             return receiveMsg;
         }
 

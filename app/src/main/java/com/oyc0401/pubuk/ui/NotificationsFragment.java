@@ -1,9 +1,12 @@
 package com.oyc0401.pubuk.ui;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +16,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.oyc0401.pubuk.MainActivity;
+import com.oyc0401.pubuk.ViewModel;
 import com.oyc0401.pubuk.databinding.FragmentNotificationsBinding;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import method.AddDate;
+import method.parse;
 
 public class NotificationsFragment extends Fragment {
 
@@ -38,8 +52,7 @@ public class NotificationsFragment extends Fragment {
     SQLiteDatabase db;
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -101,6 +114,7 @@ public class NotificationsFragment extends Fragment {
                     setgrade.setText(grade + "학년");
                     preferencesEditor.putInt("grade", grade);
                     preferencesEditor.apply();
+
                 }
             });
             gradedlg.show();
@@ -110,55 +124,35 @@ public class NotificationsFragment extends Fragment {
             preferencesEditor.apply();
         }
 
-        setgrade.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        setgrade.setOnClickListener(v -> {
 
-                AlertDialog.Builder gradedlg = new AlertDialog.Builder(getActivity());
-                gradedlg.setTitle("학년");
+            AlertDialog.Builder gradedlg = new AlertDialog.Builder(getActivity());
+            gradedlg.setTitle("학년");
 
-                gradedlg.setItems(grade_name, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        grade = which + 1;
-                        setgrade.setText(grade + "학년");
-                        preferencesEditor.putInt("grade", grade);
-                        preferencesEditor.apply();
-
-
-                    }
-                });
-                gradedlg.show();
-            }
+            gradedlg.setItems(grade_name, (dialog, which) -> {
+                grade = which + 1;
+                setgrade.setText(grade + "학년");
+                preferencesEditor.putInt("grade", grade);
+                preferencesEditor.apply();
+                new table_api().execute(String.valueOf(grade), String.valueOf(clas));
+            });
+            gradedlg.show();
         });
 
-        setclas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        setclas.setOnClickListener(v -> {
+            AlertDialog.Builder clasdlg = new AlertDialog.Builder(getActivity());
+            clasdlg.setTitle("반");
 
-                AlertDialog.Builder clasdlg = new AlertDialog.Builder(getActivity());
-                clasdlg.setTitle("반");
-                if (grade <= 2) {
-                    clasdlg.setItems(clas2, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            clas = which + 1;
-                            setclas.setText(clas + "반");
-                        }
-                    });
-                } else {
-                    clasdlg.setItems(clas2, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            clas = which + 1;
-                            setclas.setText(clas + "반");
-                            preferencesEditor.putInt("class", clas);
-                            preferencesEditor.apply();
-                        }
-                    });
-                }
-                clasdlg.show();
-            }
+                clasdlg.setItems(clas2, (dialog, which) -> {
+                    clas = which + 1;
+                    setclas.setText(clas + "반");
+                    preferencesEditor.putInt("class", clas);
+                    preferencesEditor.apply();
+                    new table_api().execute(String.valueOf(grade), String.valueOf(clas));
+
+                });
+
+            clasdlg.show();
         });
 
         /*ok.setOnClickListener(new View.OnClickListener() {
@@ -256,4 +250,75 @@ public class NotificationsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    public class table_api extends AsyncTask<String, Void, String> {
+        private String receiveMsg;
+        private String[][] arr = new String[10][8];
+
+        protected void onPreExecute() {
+            Log.d("로그", "table_api 시작");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String param1 = params[0];
+            String param2 = params[1];
+            String fir = AddDate.getCurMonday();
+            String las = AddDate.getCurFriday();
+            receiveMsg = parse.json("https://open.neis.go.kr/hub/hisTimetable?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&GRADE=" + param1 + "&CLASS_NM=" + param2 + "&TI_FROM_YMD=" + fir + "&TI_TO_YMD=" + las);
+            arr = Array_table(receiveMsg);
+            return receiveMsg;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
+            model.arr_table.setValue(arr);
+        }
+
+
+        private String[][] Array_table(String json) {
+            String[][] arr = new String[10][8];
+
+            for (int i = 0; i <= 7; i++) {//배열 초기화
+                for (int j = 0; j <= 7; j++) {
+                    arr[i][j] = " ";//arr[가로줄][교시]
+                }
+            }
+            try {//json 문자열을 배열에 넣음
+                JSONArray jarray1 = new JSONObject(json).getJSONArray("hisTimetable");
+                JSONObject jobject1 = jarray1.getJSONObject(1);
+                JSONArray jarray2 = jobject1.getJSONArray("row");
+                for (int i = 0; i <= 35; i++) {
+                    try {
+                        JSONObject jobject2 = jarray2.getJSONObject(i);
+                        String ALL_TI_YMD = jobject2.optString("ALL_TI_YMD");
+                        String PERIO = jobject2.optString("PERIO");
+                        String ITRT_CNTNT = jobject2.optString("ITRT_CNTNT");
+                        int k = 0;
+                        int a = Integer.parseInt(ALL_TI_YMD);
+                        int b = Integer.parseInt(AddDate.getCurFriday());
+                        AddDate add = new AddDate();
+                        for (int t = 0; a != b; t++) {
+                            add.setOperands(ALL_TI_YMD, 0, 0, t);
+                            a = add.get_date();
+                            k = t;
+                        }
+                        int difference = 5 - k;
+                        arr[Integer.parseInt(PERIO)][difference] = ITRT_CNTNT;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return arr;
+        }
+    }
+
+
+
 }

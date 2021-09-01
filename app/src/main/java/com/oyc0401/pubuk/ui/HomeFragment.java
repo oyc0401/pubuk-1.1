@@ -206,22 +206,6 @@ public class HomeFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //시간표, 급식 UI
         model.arr_table.observe(getViewLifecycleOwner(), this::setTable);
         model.arr_lunch.observe(getViewLifecycleOwner(), this::setLunch);
