@@ -4,9 +4,10 @@
     tools:context="com.oyc0401.pubuk.ScrollingActivity111">
 
     <item
-        android:id="@+id/unifull"
+        android:id="@+id/univfull"
         android:title="입시전형 자세히 보기" />
-    <!--item (공개해야되서 잠시 가려놓음)
-        android:id="@+id/uniurl"
-        android:title="대학교 입학처" /-->
+
+    <item
+        android:id="@+id/univHomePage"
+        android:title="대학교 홈페이지" />
 </menu>

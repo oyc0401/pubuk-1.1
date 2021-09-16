@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.oyc0401.pubuk">
+    package="com.oyc0401.pubuk" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,7 +11,12 @@
         android:roundIcon="@mipmap/bukgoapp_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pubuk"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
+        <activity
+            android:name=".MainActidasdasty2"
+            android:exported="true"
+            android:label="@string/title_activity_main_actidasdasty2"
+            android:theme="@style/Theme.Pubuk.NoActionBar" />
         <activity
             android:name=".LunchSearch"
             android:exported="true" />
@@ -36,7 +41,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Pubuk">
+            android:theme="@style/Theme.Pubuk" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "로그";
     long backKeyPressedTime = 0;
     Toast toast;
-    int grade, clas, width, height, LunchTextView_Width, first_lunch_view, Setting_To_Main;
-    int check_oncreate = 0;
+    int grade, clas;
+
 
 
     Date cu = Calendar.getInstance().getTime();
@@ -89,28 +89,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //뷰 바인딩
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        /**
+         * 기본 세팅
+         **/
+        binding = ActivityMainBinding.inflate(getLayoutInflater());//뷰 바인딩
         setContentView(binding.getRoot());
 
-        //SharedPreferences 추가
-        String SharedPrefFile = "com.example.android.SharedPreferences";
+        String SharedPrefFile = "com.example.android.SharedPreferences"; //SharedPreferences 추가
         SharedPreferences mPreferences = this.getSharedPreferences(SharedPrefFile, 0);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
 
-        //뷰모델 추가
-        ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
+        ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class); //뷰모델 추가
 
-        //파이어베이스 추가
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance(); //파이어베이스 추가
         StorageReference storageRef = storage.getReference();
-
+        /*
+         * 기본 세팅 끝!
+         * 아래에 자신의 코드를 작성하세요
+         */
 
         functionCreate(mPreferences, preferencesEditor, model, storageRef);
 
     }
 
+    // 아래의 함수는 쓰레기 입니다. 당장 분리하세요
     private void functionCreate(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model, StorageReference storageRef) {
         //급식사진 uri 뷰모델에 저장
         String lunch_filename = "lunch_menu/1.1.3_"+ fulldate + ".jpg";
