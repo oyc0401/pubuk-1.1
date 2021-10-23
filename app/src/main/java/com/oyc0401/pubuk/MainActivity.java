@@ -124,26 +124,6 @@ public class MainActivity extends AppCompatActivity {
         StorageReference subp_banner = storageRef.child(banner_filename);
         subp_banner.getDownloadUrl().addOnSuccessListener(uri -> model.img_banner.setValue(uri));
 
-        //대회사진1 uri 뷰모델에 저장
-        String congress_filename1 = "congress/" + 1 + ".jpg";
-        StorageReference subp_congress1 = storageRef.child(congress_filename1);
-        subp_congress1.getDownloadUrl().addOnSuccessListener(uri -> model.img_con1.setValue(uri));
-
-        //대회사진2 uri 뷰모델에 저장
-        String congress_filename2 = "congress/" + 2 + ".jpg";
-        StorageReference subp_congress2 = storageRef.child(congress_filename2);
-        subp_congress2.getDownloadUrl().addOnSuccessListener(uri -> model.img_con2.setValue(uri));
-
-        //대회사진3 uri 뷰모델에 저장
-        String congress_filename3 = "congress/" + 3 + ".jpg";
-        StorageReference subp_congress3 = storageRef.child(congress_filename3);
-        subp_congress3.getDownloadUrl().addOnSuccessListener(uri -> model.img_con3.setValue(uri));
-
-        ///대회사진4 uri 뷰모델에 저장
-        String congress_filename4 = "congress/" + 4 + ".jpg";
-        StorageReference subp_congress4 = storageRef.child(congress_filename4);
-        subp_congress4.getDownloadUrl().addOnSuccessListener(uri -> model.img_con4.setValue(uri));
-
         //급식,시간표
         grade = mPreferences.getInt("grade", 1);
         clas = mPreferences.getInt("class", 1);

@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -56,18 +57,12 @@ public class ScrollingActivity111 extends AppCompatActivity {
         setContentView(binding.getRoot());
         WebView webView = findViewById(R.id.webview);
 
-        setBasic(webView);
-
-        setDialog(webView);
-
-        setWebViewEvent(webView);
-
-    }
-
-    /**
-     * 메인 함수
-     **/
-    private void setBasic(WebView webView) {
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });
 
         // SharedPreferences 세팅
         SharedPreferences mPreferences = getSharedPreferences("com.example.android.SharedPreferences", 0);
@@ -91,7 +86,16 @@ public class ScrollingActivity111 extends AppCompatActivity {
         // 대학 버튼 이름 설정
         univName = univNames[mPreferences.getInt("univwhich", 0)];
         binding.uni.setText(univName);
+
+        setDialog(webView);
+
+        setWebViewEvent(webView);
+
     }
+
+    /**
+     * 메인 함수
+     **/
 
     private void setDialog(WebView webView) {
         // Declare

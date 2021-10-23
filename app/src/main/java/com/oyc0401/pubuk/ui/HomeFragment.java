@@ -93,7 +93,6 @@ public class HomeFragment extends Fragment {
 
 
     TextView[][] tv = new TextView[10][10];
-    TextView[] times = new TextView[10];
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
@@ -134,17 +133,6 @@ public class HomeFragment extends Fragment {
 
 
 
-        binding.lunchSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), LunchSearch.class);
-            startActivity(intent);
-        });
-
-
-
-
-
-
-
 
 
 
@@ -165,17 +153,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        ///학급 일정 설정
-        setPerform();
-        binding.tvPerformTitle.setOnClickListener(v -> {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
-            EditText et_perfomance = binding.etPerformance;
-            myRef.setValue(et_perfomance.getText().toString());
-            Toast.makeText(requireActivity(), "저장되었습니다", Toast.LENGTH_SHORT).show();
-
-        });
 
         //사진 클릭 설정
         binding.tvLunchPictureTitle.setText(month + "월 " + date + "일 급식사진");
@@ -193,7 +171,11 @@ public class HomeFragment extends Fragment {
         });
 
 
-
+        // 급식버튼 검색 클릭
+        binding.lunchSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), LunchSearch.class);
+            startActivity(intent);
+        });
         binding.memo.setOnClickListener(v -> {
             if (login == 20) {
                 Setbanner.launch("image/*");
@@ -225,11 +207,7 @@ public class HomeFragment extends Fragment {
 
 
         });
-        binding.tvCongressTitle.setOnClickListener(v -> {
-            if (login == 20) {
-                Setcomgress.launch("image/*");
-            }
-        });
+
 
         //시간표, 급식 UI
         Intent intent = new Intent(requireActivity(), LunchView.class);
@@ -256,10 +234,7 @@ public class HomeFragment extends Fragment {
 
         });
         model.img_banner.observe(getViewLifecycleOwner(), this::setImgBanner);
-        model.img_con1.observe(getViewLifecycleOwner(), this::setImgCon1);
-        model.img_con2.observe(getViewLifecycleOwner(), this::setImgCon2);
-        model.img_con3.observe(getViewLifecycleOwner(), this::setImgCon3);
-        model.img_con4.observe(getViewLifecycleOwner(), this::setImgCon4);
+
 
 
         return root;
@@ -385,20 +360,7 @@ public class HomeFragment extends Fragment {
         }
     });
 
-    ActivityResultLauncher<String> Setcomgress = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        try {
-            StorageReference riversRef = storageRef.child("congress/" + 1 + ".jpg");
-            UploadTask uploadTask = riversRef.putFile(uri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Toast.makeText(requireActivity(), "사진 업로드 성공", Toast.LENGTH_LONG).show();
-                ViewModel model = new ViewModelProvider(requireActivity()).get(ViewModel.class);
-                model.img_con1.setValue(uri);
-            });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
 
 
     @Override
@@ -419,10 +381,7 @@ public class HomeFragment extends Fragment {
                 tv[i][j].setText(timetable_original[i][j]);
             }
         }
-        for (int i = 1; i <= 7; i++) {
-            times[i] = root.findViewById(getResources().getIdentifier("time" + (i), "id", requireActivity().getPackageName()));
-            times[i].setText(i + "교시: " + timetable_original[i][dayday]);
-        }
+
     }
 
     private void setTable(String[][] array) {//저장된 json파일을 시간표배열에 넣고 시간표 보여줌
@@ -454,13 +413,7 @@ public class HomeFragment extends Fragment {
             AddDate addDate = new AddDate();
             int dayday = addDate.get_day() - 1;
 
-            for (int i = 1; i <= 7; i++) {
-                times[i].setText(i + "교시: " + array[i][dayday]);
-                if (!array[i][dayday].equals(timetable_original[i][dayday])) {
-                    times[i].setTextColor(Color.parseColor("#304FFE"));
 
-                }
-            }
 
 
             Log.d(TAG, "setTableㅇㅁㄴㅇㅁㄴ: " + dayday + array[1][dayday]);
@@ -603,51 +556,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void setPerform() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(grade + "_" + clas);
 
-        TextView tv_perform = binding.tvPerformTitle;
-        String perform_title_name = grade + "학년 " + clas + "반 일정";
-        tv_perform.setText(perform_title_name);
-        EditText et_perfomance = binding.etPerformance;
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                //Log.d("로그", "Value is: " + value);
-                et_perfomance.setText(value);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.w("로그", "Failed to read value.", error.toException());
-            }
-        });
-    }
-
-    private void setImgCon1(Uri uri) {
-        ImageView iv;
-        iv = binding.ivCongress1;
-        Glide.with(requireActivity()).load(uri).into(iv);
-    }
-
-    private void setImgCon2(Uri uri) {
-        ImageView iv = binding.ivCongress2;
-        Glide.with(requireActivity()).load(uri).into(iv);
-    }
-
-    private void setImgCon3(Uri uri) {
-        ImageView iv = binding.ivCongress3;
-        Glide.with(requireActivity()).load(uri).into(iv);
-    }
-
-    private void setImgCon4(Uri uri) {
-        ImageView iv = binding.ivCongress4;
-        Glide.with(requireActivity()).load(uri).into(iv);
-    }
 }

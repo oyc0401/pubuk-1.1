@@ -22,7 +22,12 @@
         android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="찾고싶은 메뉴를 적어주세요 ex) 딸기"/>
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionSearch"
+        android:hint="찾고싶은 메뉴를 적어주세요 ex) 딸기">
+        <requestFocus/>
+    </EditText>
     <Button
         android:id="@+id/btn_search"
         android:layout_width="match_parent"
