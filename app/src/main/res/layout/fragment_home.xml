@@ -1003,7 +1003,7 @@
                 android:id="@+id/memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="제작: 코딩라이프\n\n플레이스토어에 의견 남겨주세요.\n\n 1.1.3" />
+                android:text="제작: 코딩라이프\n\n플레이스토어에 의견 남겨주세요.\n\n 1.1.4" />
         </LinearLayout>
 
     </LinearLayout>

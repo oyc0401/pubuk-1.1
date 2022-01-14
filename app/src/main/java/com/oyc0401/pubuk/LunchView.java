@@ -44,6 +44,7 @@ public class LunchView extends AppCompatActivity {
         setContentView(R.layout.activity_lunch_view);
 
 
+
         imageView = findViewById(R.id.bigLunchView);
         imageView.setImage(ImageSource.resource(R.drawable.loading));
 

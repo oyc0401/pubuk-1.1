@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
     Toast toast;
     int grade, clas;
 
-
-
     Date cu = Calendar.getInstance().getTime();
     SimpleDateFormat mfulldate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
     SimpleDateFormat mdate = new SimpleDateFormat("dd", Locale.getDefault());
@@ -89,9 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /**
-         * 기본 세팅
-         **/
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());//뷰 바인딩
         setContentView(binding.getRoot());
 
@@ -101,42 +97,27 @@ public class MainActivity extends AppCompatActivity {
 
         ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class); //뷰모델 추가
 
-        FirebaseStorage storage = FirebaseStorage.getInstance(); //파이어베이스 추가
-        StorageReference storageRef = storage.getReference();
-        /*
-         * 기본 세팅 끝!
-         * 아래에 자신의 코드를 작성하세요
-         */
 
-        functionCreate(mPreferences, preferencesEditor, model, storageRef);
+        //firebase 연동
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-    }
-
-    // 아래의 함수는 쓰레기 입니다. 당장 분리하세요
-    private void functionCreate(SharedPreferences mPreferences, SharedPreferences.Editor preferencesEditor, ViewModel model, StorageReference storageRef) {
-        //급식사진 uri 뷰모델에 저장
-        String lunch_filename = "lunch_menu/1.1.3_"+ fulldate + ".jpg";
-        StorageReference subp = storageRef.child(lunch_filename);
+        StorageReference subp = storageRef.child("lunch_menu/1.1.3_" + fulldate + ".jpg");
         subp.getDownloadUrl().addOnSuccessListener(uri -> model.img_lunch.setValue(uri));
-
-        //배너사진 uri 뷰모델에 저장
-        String banner_filename = "banner/" + 1 + ".jpg";
-        StorageReference subp_banner = storageRef.child(banner_filename);
+        StorageReference subp_banner = storageRef.child("banner/" + 1 + ".jpg");
         subp_banner.getDownloadUrl().addOnSuccessListener(uri -> model.img_banner.setValue(uri));
 
-        //급식,시간표
+        //API 호출
         grade = mPreferences.getInt("grade", 1);
         clas = mPreferences.getInt("class", 1);
-
         table_api tableApi = new table_api();
         tableApi.execute(String.valueOf(grade), String.valueOf(clas));
-
         lunch_api lunchApi = new lunch_api();
         lunchApi.execute(String.valueOf(fulldate));
 
-
         setNav();
         setpassword(mPreferences, preferencesEditor, model);
+
+
     }
 
 
@@ -154,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             toast.cancel();
         }
     }
-
 
     private void setNav() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -229,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d(TAG, "onCreate 로그인 코드: " + login);
     }
+
 
     public class table_api extends AsyncTask<String, Void, String> {
         private String receiveMsg;
@@ -313,7 +294,9 @@ public class MainActivity extends AppCompatActivity {
             add.setOperands(date1, 0, 0, 30);
             int date2 = add.get_date();
             receiveMsg = parse.json("https://open.neis.go.kr/hub/mealServiceDietInfo?Key=59b8af7c4312435989470cba41e5c7a6&Type=json&pIndex=1&pSize=1000&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530072&MLSV_FROM_YMD=" + date1 + "&MLSV_TO_YMD=" + date2);
+
             arr = Array_lunch(receiveMsg);
+
             return receiveMsg;
         }
 
@@ -322,12 +305,13 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(s);
             ViewModel model = new ViewModelProvider(MainActivity.this).get(ViewModel.class);
             model.arr_lunch.setValue(arr);
+
         }
 
         private String[][] Array_lunch(String json) {
 
             String[][] arraysum = new String[35][3];
-            String[][] arr = new String[14][40];
+            String[][] arr = new String[15][40];
 
             int how_much_parsing = 25;
 
@@ -368,14 +352,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (int i = 0; i <= how_much_parsing; i++) {//배열에 담긴 점심을 분류해서 lunch에 옮김
-                int oridate = Integer.parseInt(arraysum[i][0]);
-                if (oridate != 0) {
-                    int lunch_month = ((oridate - 20210000) / 100);
-                    int lunch_date = (oridate - 20210000 - lunch_month * 100);
-                    arr[lunch_month][lunch_date] = arraysum[i][1];
 
+                try {
+                    int oridate = Integer.parseInt(arraysum[i][0]);
+
+                    if (oridate != 0) { // oridate가 null값이 발생할수도 있음
+                        int lunch_month = ((oridate - 20210000) / 100);
+                        int lunch_date = (oridate - 20210000 - lunch_month * 100);
+                        arr[lunch_month][lunch_date] = arraysum[i][1];
+                        Log.d(TAG, "Array_lunch: "+oridate);
+                    }
+                } catch (Exception e) {
                 }
+
             }
+
             return arr;
         }
     }

@@ -424,8 +424,12 @@ public class HomeFragment extends Fragment {
 
     private void setLunch(String[][] array) {//저장된 json파일을 급식배열에 넣고 급식 보여줌
 
-        int date_number = 30;
+        int date_number = 30; //출력 날짜 설정
+        if(month==12) date_number=30-date;
         first_lunch_view = 10;
+
+
+
         for (int i = 0; i <= date_number; i++) {
             AddDate add = new AddDate();
             add.setOperands(String.valueOf(fulldate), 0, 0, i);
@@ -465,19 +469,19 @@ public class HomeFragment extends Fragment {
         lunchLinear.addView(tv_lunch);
     }
 
-    public void createtv(int b, int c, int daynum, String[][] lunch_array) {//createtv(7,15);=7월 15일급식출력
+    public void createtv(int month, int date, int daynum, String[][] lunch_array) {//createtv(7,15);=7월 15일급식출력
         LinearLayout lunch_menu_linear = new LinearLayout(requireActivity().getApplicationContext());
         TextView tv_lunch_date = new TextView(requireActivity().getApplicationContext());
         TextView tv_lunch = new TextView(requireActivity().getApplicationContext());
-
+        Log.d(TAG, "createtv: dsadasda"+daynum);
         dada = day[daynum];
         //Log.d("로그-출력요일",dada);
-        String tv_lunch_date_text = b + "월 " + c + "일 (" + dada + ")";
+        String tv_lunch_date_text = month + "월 " + date + "일 (" + dada + ")";
         tv_lunch_date.setText(tv_lunch_date_text);
         tv_lunch_date.setTextSize(13);
         tv_lunch_date.setTextColor(Color.rgb(0, 0, 0));
 
-        tv_lunch.setText(lunch_array[b][c]);
+        tv_lunch.setText(lunch_array[month][date]);
         tv_lunch.setTextSize(13);
         tv_lunch.setTextColor(Color.rgb(0, 0, 0));
         tv_lunch.setLineSpacing(0, (float) 1.1);
