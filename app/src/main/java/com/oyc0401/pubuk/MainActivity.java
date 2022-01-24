@@ -357,8 +357,8 @@ public class MainActivity extends AppCompatActivity {
                     int oridate = Integer.parseInt(arraysum[i][0]);
 
                     if (oridate != 0) { // oridate가 null값이 발생할수도 있음
-                        int lunch_month = ((oridate - 20210000) / 100);
-                        int lunch_date = (oridate - 20210000 - lunch_month * 100);
+                        int lunch_month = ((oridate - 20220000) / 100);
+                        int lunch_date = (oridate - 20220000 - lunch_month * 100);
                         arr[lunch_month][lunch_date] = arraysum[i][1];
                         Log.d(TAG, "Array_lunch: "+oridate);
                     }

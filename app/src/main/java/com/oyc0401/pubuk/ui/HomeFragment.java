@@ -437,8 +437,8 @@ public class HomeFragment extends Fragment {
             int addDay = add.get_day();
             int addDate = add.get_date();
 
-            int lunch_month = ((addDate - 20210000) / 100);
-            int lunch_date = (addDate - 20210000 - lunch_month * 100);
+            int lunch_month = ((addDate - 20220000) / 100);
+            int lunch_date = (addDate - 20220000 - lunch_month * 100);
             createtv(lunch_month, lunch_date, addDay, array);
         }
 

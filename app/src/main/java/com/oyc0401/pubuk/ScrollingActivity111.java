@@ -39,7 +39,7 @@ public class ScrollingActivity111 extends AppCompatActivity {
     int size = 150; //확대사이즈
     String univCode;
     int univProcess;
-    String firstUrl = "http://www.adiga.kr/kcue/ast/eip/eis/inf/stdptselctn/eipStdGenSlcIemWebView.do?sch_year=2021&univ_cd="; //어디가 url1
+    String firstUrl = "http://www.adiga.kr/kcue/ast/eip/eis/inf/stdptselctn/eipStdGenSlcIemWebView.do?sch_year=2022&univ_cd="; //어디가 url1
     String secondUrl = "&iem_cd="; //어디가 url2
     String univName = "대학교 입시결과 검색";
     String[] univNames = value.uni_list();
@@ -79,9 +79,9 @@ public class ScrollingActivity111 extends AppCompatActivity {
         webView.loadUrl(url);
 
         // 입시전형 버튼 디자인 세팅
-        if (univProcess == 30) setUnivBtnDesign(1);
+        if (univProcess == 26) setUnivBtnDesign(1);
         else if (univProcess == 31) setUnivBtnDesign(2);
-        else if (univProcess == 32) setUnivBtnDesign(3);
+        else if (univProcess == 41) setUnivBtnDesign(3);
 
         // 대학 버튼 이름 설정
         univName = univNames[mPreferences.getInt("univwhich", 0)];
@@ -131,7 +131,7 @@ public class ScrollingActivity111 extends AppCompatActivity {
 
         binding.hak1.setOnClickListener(v -> {
             setUnivBtnDesign(1);
-            replaceWebView(webView, univCode, 30);
+            replaceWebView(webView, univCode, 26);
             showToastMessage("학종");
         });
 
@@ -143,7 +143,7 @@ public class ScrollingActivity111 extends AppCompatActivity {
 
         binding.hak3.setOnClickListener(v -> {
             setUnivBtnDesign(3);
-            replaceWebView(webView, univCode, 32);
+            replaceWebView(webView, univCode, 41);
             showToastMessage("정시");
         });
     }
@@ -260,7 +260,7 @@ public class ScrollingActivity111 extends AppCompatActivity {
 
             // 입시전형 자세히 보기 누르면
             case R.id.univfull:
-                intent.setData(Uri.parse("http://adiga.kr/kcue/ast/eip/eis/inf/stdptselctn/eipStdGenSlcIemCmprGnrl2.do?p_menu_id=PG-EIP-16001&chkUnivList=" + univCode + "&sch_year=2021"));
+                intent.setData(Uri.parse("http://adiga.kr/kcue/ast/eip/eis/inf/stdptselctn/eipStdGenSlcIemCmprGnrl2.do?p_menu_id=PG-EIP-16001&chkUnivList=" + univCode + "&sch_year=2022"));
                 startActivity(intent);
                 break;
 
